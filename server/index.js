@@ -32,7 +32,9 @@ let undealedTiles = [
 let dealedTiles = [];
 let unreadedQuestions = [{
   question: '¿En cuántos soportes la suma de las cifras es 18 o más?',
-  answerFunction: () => {}
+  answerFunction: () => {
+    
+  }
 }, {
   question: '¿En cuántos soportes aparece la misma cifra en colores diferentes? (Por ejemplo, 7 nazul y 7 amarillo en un mismo soporte)',
   answerFunction: () => {}
@@ -74,6 +76,7 @@ function dealAll() {
   deal('Jugador 2');
   deal('Jugador 3');
   deal('Jugador 4');
+  newTurn();
 }
 
 function deal(playerName) {
@@ -95,13 +98,13 @@ function askPlayerResolve() {
 function read() {
   const random = Math.floor(Math.random() * unreadedQuestions.length);
   var question = unreadedQuestions.splice(random, 1)[0];
-  console.log(question, random);
   var answer = question.answerFunction(players, turn.activePlayer);
   var reading = players[turn.activePlayerIndex];
   turn.ready = {};
-  for (var i in reading) {
-    turn.ready[reading[i].name] = false;
+  for (var i in players) {
+    turn.ready[players[i].name] = false;
   }
+  turn.ready[reading.name] = true;
   return {
     question: question.text,
     answer: answer
@@ -110,6 +113,18 @@ function read() {
 
 function readComplete(playerName) {
   turn.ready[playerName] = true;
+  let allReady = true;
+  for (var i in turn.ready) {
+    allReady = allReady && turn.ready[i];
+  }
+  if (allReady) {
+    nextActivePlayer();
+    newTurn();
+  }
+}
+
+function newTurn() {
+  askPlayerResolve();
 }
 
 function nextActivePlayer() {
@@ -118,13 +133,19 @@ function nextActivePlayer() {
 
 let ended = false;
 dealAll();
-nextActivePlayer();
-while (!ended) {
-  askPlayerResolve();
-  read();
-  readComplete('Jugador 2');
-  readComplete('Jugador 3');
-  readComplete('Jugador 4');
-  nextActivePlayer();
-  ended = true;
-}
+read();
+readComplete('Jugador 2');
+readComplete('Jugador 3');
+readComplete('Jugador 4');
+read();
+readComplete('Jugador 3');
+readComplete('Jugador 4');
+readComplete('Jugador 1');
+read();
+readComplete('Jugador 4');
+readComplete('Jugador 1');
+readComplete('Jugador 2');
+read();
+readComplete('Jugador 1');
+readComplete('Jugador 2');
+readComplete('Jugador 3');
