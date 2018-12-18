@@ -44,7 +44,9 @@ let unreadedQuestions = [{
   answerFunction: () => {}
 }];
 let readedQuestions = [];
-let turn = {};
+let turn = {
+  activePlayerIndex: -1
+};
 
 players.push({
   name: 'Jugador 1',
@@ -74,10 +76,16 @@ function dealAll() {
   deal('Jugador 4');
 }
 
-function deal(X) {
-  players[X].rack.push(undealedTiles.splice(random, 1));
-  players[X].rack.push(undealedTiles.splice(random, 1));
-  players[X].rack.push(undealedTiles.splice(random, 1));
+function deal(playerName) {
+  let random;
+  let player = players.find(player => player.name === playerName);
+  random = Math.floor(Math.random() * undealedTiles.length) + 1;
+  player.rack.push(undealedTiles.splice(random, 1));
+  random = Math.floor(Math.random() * undealedTiles.length) + 1;
+  player.rack.push(undealedTiles.splice(random, 1));
+  random = Math.floor(Math.random() * undealedTiles.length) + 1;
+  player.rack.push(undealedTiles.splice(random, 1));
+  console.log(player);
 }
 
 function askPlayerResolve() {
@@ -85,9 +93,11 @@ function askPlayerResolve() {
 }
 
 function read() {
-  var question = unreadedQuestions.splice(random, 1);
+  const random = Math.floor(Math.random() * unreadedQuestions.length);
+  var question = unreadedQuestions.splice(random, 1)[0];
+  console.log(question, random);
   var answer = question.answerFunction(players, turn.activePlayer);
-  var reading = players.filter(player => player.name !== turn.activePlayer.name);
+  var reading = players[turn.activePlayerIndex];
   turn.ready = {};
   for (var i in reading) {
     turn.ready[reading[i].name] = false;
@@ -98,14 +108,23 @@ function read() {
   };
 }
 
+function readComplete(playerName) {
+  turn.ready[playerName] = true;
+}
+
+function nextActivePlayer() {
+  turn.activePlayerIndex = ++turn.activePlayerIndex%players.length;
+}
+
+let ended = false;
 dealAll();
 nextActivePlayer();
 while (!ended) {
   askPlayerResolve();
   read();
-  readComplete();
-  readComplete();
-  readComplete();
+  readComplete('Jugador 2');
+  readComplete('Jugador 3');
+  readComplete('Jugador 4');
   nextActivePlayer();
+  ended = true;
 }
-
