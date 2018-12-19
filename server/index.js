@@ -1,49 +1,66 @@
 let players = [];
 let undealedTiles = [
-  {number: 1, color: 'GREEN'},
-  {number: 2, color: 'YELLOW'},
-  {number: 2, color: 'YELLOW'},
-  {number: 3, color: 'BLACK'},
-  {number: 3, color: 'BLACK'},
-  {number: 3, color: 'BLACK'},
-  {number: 4, color: 'BROWN'},
-  {number: 4, color: 'BROWN'},
-  {number: 4, color: 'BROWN'},
-  {number: 4, color: 'BROWN'},
-  {number: 5, color: 'RED'},
-  {number: 5, color: 'RED'},
-  {number: 5, color: 'RED'},
-  {number: 5, color: 'RED'},
-  {number: 5, color: 'BLACK'},
-  {number: 6, color: 'PINK'},
-  {number: 6, color: 'PINK'},
-  {number: 6, color: 'PINK'},
-  {number: 6, color: 'GREEN'},
-  {number: 6, color: 'GREEN'},
-  {number: 6, color: 'GREEN'},
-  {number: 7, color: 'YELLOW'},
-  {number: 7, color: 'YELLOW'},
-  {number: 7, color: 'PINK'},
-  {number: 7, color: 'BLUE'},
-  {number: 7, color: 'BLUE'},
-  {number: 7, color: 'BLUE'},
-  {number: 7, color: 'BLUE'},
+  {number: 1, color: 'GREEN'}, {number: 2, color: 'YELLOW'}, {number: 2, color: 'YELLOW'}, {number: 3, color: 'BLACK'}, {number: 3, color: 'BLACK'},
+  {number: 3, color: 'BLACK'}, {number: 4, color: 'BROWN'},  {number: 4, color: 'BROWN'},  {number: 4, color: 'BROWN'}, {number: 4, color: 'BROWN'},
+  {number: 5, color: 'RED'},   {number: 5, color: 'RED'},    {number: 5, color: 'RED'},    {number: 5, color: 'RED'},   {number: 5, color: 'BLACK'},
+  {number: 6, color: 'PINK'},  {number: 6, color: 'PINK'},   {number: 6, color: 'PINK'},   {number: 6, color: 'GREEN'}, {number: 6, color: 'GREEN'},
+  {number: 6, color: 'GREEN'}, {number: 7, color: 'YELLOW'}, {number: 7, color: 'YELLOW'}, {number: 7, color: 'PINK'},  {number: 7, color: 'BLUE'},
+  {number: 7, color: 'BLUE'},  {number: 7, color: 'BLUE'},   {number: 7, color: 'BLUE'},
 ];
 let dealedTiles = [];
 let unreadedQuestions = [{
+  _id: 1,
   question: '¿En cuántos soportes la suma de las cifras es 18 o más?',
-  answerFunction: () => {
-    
+  answerFunction: (racks) => {
+    const solution = racks.reduce((prev, rack) => {
+      return prev + (rack.reduce((prev, tile) => prev + tile.number, 0) >= 18 ? 1 : 0);
+    }, 0);
+    return `En ${solution} soporte${solution === 1 ? '' : 's'}`;
   }
 }, {
-  question: '¿En cuántos soportes aparece la misma cifra en colores diferentes? (Por ejemplo, 7 nazul y 7 amarillo en un mismo soporte)',
-  answerFunction: () => {}
+  _id: 3,
+  question: '¿En cuántos soportes aparece la misma cifra en colores diferentes? (Por ejemplo, 7 azul y 7 amarillo en un mismo soporte)',
+  answerFunction: (racks) => {
+    const solution = racks.reduce((prev, rack) => {
+      return prev + (rack[0].number === rack[1].number && rack[0].color !== rack[1].color ||
+              rack[0].number === rack[2].number && rack[0].color !== rack[2].color ||
+              rack[1].number === rack[2].number && rack[1].color !== rack[2].color) ? 1 : 0;
+    }, 0);
+    return `En ${solution} soporte${solution === 1 ? '' : 's'}`;
+  }
 }, {
-  question: '¿Cuantas cifras no ves?',
-  answerFunction: () => {}
-}, {
+  _id: 7,
   question: '¿En cuántos soportes ves 3 cifras consecutivas?',
-  answerFunction: () => {}
+  answerFunction: (racks) => {
+    const solution = racks.reduce((prev, rack) => {
+      const sorted = rack.slice().sort((tileA, tileB) => {
+        return tileA.number > tileB.number;
+      });
+      let consecutives = true;
+      for (let i = 1; i < sorted.length && consecutives; i++) {
+        if (sorted[i].number - sorted[i - 1].number !== 1) {
+          consecutives = false;
+        }
+      }
+      return prev + consecutives ? 1 : 0;
+    }, 0);
+    return `En ${solution} soporte${solution === 1 ? '' : 's'}`;
+  }
+}, {
+  _id: 10,
+  question: '¿Cuantas cifras no ves?',
+  answerFunction: (racks) => {
+    const numbers = [false, false, false, false, false, false, false];
+    for (let i in racks) {
+      for (let j in racks[i]) {
+        numbers[racks[i][j].number - 1] = true;
+      }
+    }
+    const solution = numbers.reduce((prev, number) => {
+      return prev + (!number ? 1 : 0);
+    }, 0);
+    return `No veo ${solution} cifra${solution === 1 ? '' : 's'}`;
+  }
 }];
 let readedQuestions = [];
 let turn = {
@@ -82,13 +99,12 @@ function dealAll() {
 function deal(playerName) {
   let random;
   let player = players.find(player => player.name === playerName);
-  random = Math.floor(Math.random() * undealedTiles.length) + 1;
-  player.rack.push(undealedTiles.splice(random, 1));
-  random = Math.floor(Math.random() * undealedTiles.length) + 1;
-  player.rack.push(undealedTiles.splice(random, 1));
-  random = Math.floor(Math.random() * undealedTiles.length) + 1;
-  player.rack.push(undealedTiles.splice(random, 1));
-  console.log(player);
+  random = Math.floor(Math.random() * undealedTiles.length);
+  player.rack.push(undealedTiles.splice(random, 1)[0]);
+  random = Math.floor(Math.random() * undealedTiles.length);
+  player.rack.push(undealedTiles.splice(random, 1)[0]);
+  random = Math.floor(Math.random() * undealedTiles.length);
+  player.rack.push(undealedTiles.splice(random, 1)[0]);
 }
 
 function askPlayerResolve() {
@@ -98,15 +114,21 @@ function askPlayerResolve() {
 function read() {
   const random = Math.floor(Math.random() * unreadedQuestions.length);
   var question = unreadedQuestions.splice(random, 1)[0];
-  var answer = question.answerFunction(players, turn.activePlayer);
+  const racks = players
+    .filter((player, index) => index !== turn.activePlayerIndex)
+    .map(player => player.rack);
+  var answer = question.answerFunction(racks);
   var reading = players[turn.activePlayerIndex];
   turn.ready = {};
   for (var i in players) {
     turn.ready[players[i].name] = false;
   }
   turn.ready[reading.name] = true;
+  console.log('question', question.question);
+  console.log('answer', answer);
+  
   return {
-    question: question.text,
+    question: question.question,
     answer: answer
   };
 }
@@ -133,6 +155,7 @@ function nextActivePlayer() {
 
 let ended = false;
 dealAll();
+nextActivePlayer();
 read();
 readComplete('Jugador 2');
 readComplete('Jugador 3');
