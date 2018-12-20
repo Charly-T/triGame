@@ -4,15 +4,17 @@ class TriRack extends HTMLElement {
   connectedCallback() { 
     this.createShadowRoot();
     const name = this.getAttribute('name');
-    this.render(name);
+    const rack = this.getAttribute('rack');
+    this.render(name, rack);
   }
 
-  addNumbers(root) {
-    const numbers = [
-      createElement('tri-tile-number', '[number=7][color=BLUE]'),
-      createElement('tri-tile-number', '[number=6][color=GREEN]'),
-      createElement('tri-tile-number', '[number=5][color=BLACK]')
-    ];
+  addNumbers(root, rack) {
+    rack = rack.split(';');
+    let numbers = [];
+    for (let i = 0; i < rack.length; i++) {
+      const tile = rack[i].split(',');
+      numbers.push(createElement('tri-tile-number', `[number=${tile[0]}][color=${tile[1]}]`));
+    }
     root.appendChild(div('.numbers', numbers));
   }
 
@@ -26,10 +28,10 @@ class TriRack extends HTMLElement {
     this.shadowRoot.appendChild(styleTag);
   }
 
-  render(name) {
+  render(name, rack) {
     var root = div('.rack');
     this.shadowRoot.appendChild(root);
-    this.addNumbers(root);
+    this.addNumbers(root, rack);
     this.addName(root, name);
     this.addStyle();
   }

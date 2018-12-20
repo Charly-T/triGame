@@ -3,12 +3,14 @@ import { div } from './naive.js';
 class TriCardQuestion extends HTMLElement {
   connectedCallback() {
     this.createShadowRoot();
-    this.render();
+    const question = this.getAttribute('question');
+    const answer = this.getAttribute('answer');
+    this.render(question, answer);
   }
 
-  addQuestion(root) {
-    var question = div('.question', ['¿En cuántos soportes aparece la misma cifra en colores diferentes? (Por ejemplo, 7 azul y 7 amarillo en un mismo soporte)']);
-    var answer = div('.answer', ['En 2 soportes']);
+  addQuestion(root, question, answer) {
+    var question = div('.question', [question]);
+    var answer = div('.answer', [answer]);
     var action = div('.action', ['Vale']);
     action.addEventListener('click', (event) => {
       event.target.classList.add('active');
@@ -24,10 +26,10 @@ class TriCardQuestion extends HTMLElement {
     this.shadowRoot.appendChild(styleTag);
   }
 
-  render() {
+  render(question, answer) {
     var root = div('.card-question');
     this.shadowRoot.appendChild(root);
-    this.addQuestion(root);
+    this.addQuestion(root, question, answer);
     this.addStyle();
   }
 

@@ -2,8 +2,6 @@ const questions = require('./questions');
 
 class Game {
   constructor(io) {
-    console.log(questions);
-    
     this.players = [];
     this.undealedTiles = [
       {number: 1, color: 'GREEN'}, {number: 2, color: 'YELLOW'}, {number: 2, color: 'YELLOW'}, {number: 3, color: 'BLACK'}, {number: 3, color: 'BLACK'},
@@ -19,40 +17,94 @@ class Game {
       activePlayerIndex: -1
     };
     this.io = io;
-    this.players.push({
-      name: 'Jugador 1',
-      socket: {},
-      rack: []
-    });
-    this.players.push({
-      name: 'Jugador 2',
-      socket: {},
-      rack: []
-    });
-    this.players.push({
-      name: 'Jugador 3',
-      socket: {},
-      rack: []
-    });
-    this.players.push({
-      name: 'Jugador 4',
-      socket: {},
-      rack: []
-    });
+    this.handleConnections();
+    // this.players.push({
+    //   name: 'Jugador 2',
+    //   socket: {
+    //     emit: () => {
+    //       console.log('dummy emit');
+    //     }
+    //   },
+    //   rack: []
+    // });
+    // this.players.push({
+    //   name: 'Jugador 3',
+    //   socket: {
+    //     emit: () => {
+    //       console.log('dummy emit');
+    //     }
+    //   },
+    //   rack: []
+    // });
+    // this.players.push({
+    //   name: 'Jugador 4',
+    //   socket: {
+    //     emit: () => {
+    //       console.log('dummy emit');
+    //     }
+    //   },
+    //   rack: []
+    // });
   }
   
-  
+  handleConnections() {
+    this.io.on('connection', (socket) => {
+      socket.on('LOGIN', (e) => {
+        console.log(e.name + ' joining room, ' + (this.players.length + 1) + ' players');
+        this.addPlayer({
+          name: e.name,
+          socket: socket
+        });
+      });
+      socket.on('disconnect', () => {
+        let deleteIndex;
+        for (let i in this.players) {
+          if (this.players[i].socket === socket) {
+            deleteIndex = i;
+            console.log('user ' + this.players[i].name + ' disconnected');
+          }
+        }
+        this.players.splice(deleteIndex, 1);
+      });
+    });
+  }
+
+  addPlayer(player) {
+    this.players.push({
+      ...player,
+      rack: []
+    });
+    if (this.players.length === 4) {
+      this.startGame();
+    } else {
+      for (let i in this.players) {
+        this.players[i].socket.emit('JOINED', {
+          player: player.name,
+          players: this.players.length
+        });
+      }
+    }
+  }
+
+  startGame() {
+    this.dealAll();
+    this.nextActivePlayer();
+    for (let i in this.players) {
+      this.players[i].socket.emit('GAME_START',
+        this.players.filter(player => player.name !== this.players[i].name).map(player => ({name: player.name, rack: player.rack}))
+      );
+    }
+    this.newTurn();
+  }
+
   dealAll() {
-    deal('Jugador 1');
-    deal('Jugador 2');
-    deal('Jugador 3');
-    deal('Jugador 4');
-    newTurn();
+    for (let i in this.players) {
+      this.deal(this.players[i]);
+    }
   }
   
-  deal(playerName) {
+  deal(player) {
     let random;
-    let player = this.players.find(player => player.name === playerName);
     for (let i = 0; i < 3; i++) {
       random = Math.floor(Math.random() * this.undealedTiles.length);
       player.rack.push(this.undealedTiles.splice(random, 1)[0]);
@@ -60,7 +112,12 @@ class Game {
   }
   
   askPlayerResolve() {
-    
+    this.players[this.turn.activePlayerIndex].socket.emit('ASK_RESOLVE');
+    this.players[this.turn.activePlayerIndex].socket.once('ASK_RESOLVE_RESPONSE', (response) => {
+      if (response === 'READ') {0
+        this.read();
+      }
+    });
   }
   
   read() {
@@ -77,13 +134,12 @@ class Game {
       this.turn.ready[this.players[i].name] = false;
     }
     this.turn.ready[reading.name] = true;
-    console.log('question', question.question);
-    console.log('answer', answer);
-    
-    return {
-      question: question.question,
-      answer: answer
-    };
+    for (let i in this.players) {
+      this.players[i].socket.emit('READ', {
+        question: question.question,
+        answer: answer
+      });
+    }
   }
   
   readComplete(playerName) {
@@ -99,7 +155,7 @@ class Game {
   }
   
   newTurn() {
-    askPlayerResolve();
+    this.askPlayerResolve();
   }
   
   nextActivePlayer() {

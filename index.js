@@ -54,9 +54,7 @@ const server = http.createServer(function (req, res) {
   });
 });
 
-const io = require('socket.io')(server, {
-  path: '/triGame'
-});
+const io = require('socket.io')(server);
 
 const gameInstance = new Game(io);
 

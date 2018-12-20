@@ -6,7 +6,8 @@ body {
   background-color: #2c3e50;
 }
 
-.bottom {
+.card-question-placeholder,
+.solution-card-placeholder {
   position: absolute;
   bottom: 20px;
   display: flex;
@@ -17,11 +18,15 @@ body {
   left: 0;
 }
 
+.card-question-placeholder {
+  bottom: 440px;
+}
+
 .bottom tri-card-question {
   margin-bottom: 20px;
 }
 
-.racks {
+.racks-placeholder {
   display: flex;
   flex-direction: row;
   justify-content: space-evenly;
