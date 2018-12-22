@@ -14,6 +14,8 @@ class TriCardQuestion extends HTMLElement {
     var action = div('.action', ['Vale']);
     action.addEventListener('click', (event) => {
       event.target.classList.add('active');
+      let readDoneEvent = new CustomEvent('READ_DONE');
+      this.dispatchEvent(readDoneEvent);
     });
     root.appendChild(question);
     root.appendChild(answer);

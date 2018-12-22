@@ -114,15 +114,21 @@ class Game {
   askPlayerResolve() {
     this.players[this.turn.activePlayerIndex].socket.emit('ASK_RESOLVE');
     this.players[this.turn.activePlayerIndex].socket.once('ASK_RESOLVE_RESPONSE', (response) => {
-      if (response === 'READ') {0
+      if (response === 'READ') {
         this.read();
       }
     });
   }
   
   read() {
-    const random = Math.floor(Math.random() * this.unreadedQuestions.length);
-    const question = this.unreadedQuestions.splice(random, 1)[0];
+    let random;
+    let question;
+    if (this.unreadedQuestions.length === 0) {
+      this.unreadedQuestions = this.readedQuestions.slice();
+      this.readedQuestions = [];
+    }
+    random = Math.floor(Math.random() * this.unreadedQuestions.length);
+    question = this.unreadedQuestions.splice(random, 1)[0];
     this.readedQuestions.push(question);
     const racks = this.players
       .filter((player, index) => index !== this.turn.activePlayerIndex)
@@ -137,7 +143,11 @@ class Game {
     for (let i in this.players) {
       this.players[i].socket.emit('READ', {
         question: question.question,
-        answer: answer
+        answer: answer,
+        reader: reading.name
+      });
+      this.players[i].socket.once('READ_DONE', () => {
+        this.readComplete(this.players[i].name);
       });
     }
   }
@@ -149,8 +159,11 @@ class Game {
       allReady = allReady && this.turn.ready[i];
     }
     if (allReady) {
-      nextActivePlayer();
-      newTurn();
+      for (let i in this.players) {
+        this.players[i].socket.emit('FINISH_READ');
+      }
+      this.nextActivePlayer();
+      this.newTurn();
     }
   }
   

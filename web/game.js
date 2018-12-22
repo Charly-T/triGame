@@ -1,10 +1,12 @@
-import { div, createElement } from './naive.js';
+import { createElement } from './naive.js';
 
 const loginPlaceholder = document.getElementsByClassName('login-placeholder')[0];
 const triLogin = createElement('tri-login');
+let user;
 
 triLogin.addEventListener('login', function (e) {
   const socket = io('');
+  user = e.detail.name;
   socket.emit('LOGIN', {
     name: e.detail.name
   });
@@ -24,7 +26,27 @@ triLogin.addEventListener('login', function (e) {
     socket.emit('ASK_RESOLVE_RESPONSE', 'READ');
   });
   socket.on('READ', (card) => {
-    document.getElementsByClassName('card-question-placeholder')[0].appendChild(createElement('tri-card-question', `[question=${card.question}][answer=${card.answer}]${card.waitAnswer ? 'waitsAnswer' : ''}`));
+    const question = createElement('tri-card-question', `[question=${card.question}][answer=${card.answer}]${card.waitAnswer ? 'waitsAnswer' : ''}`);
+    question.addEventListener('READ_DONE', function (e) {
+      socket.emit('READ_DONE');
+    });
+    document.getElementsByClassName('card-question-placeholder')[0].appendChild(question);
+    let event = new CustomEvent('HIGHLIGHT', {
+      detail: false
+    });
+    const racks = document.querySelectorAll(`tri-rack`);
+    racks.forEach((item) => {
+      item.dispatchEvent(event);
+    });
+    if (user !== card.reader) {
+      event = new CustomEvent('HIGHLIGHT', {
+        detail: true
+      });
+      document.querySelector(`tri-rack[name=${card.reader}]`).dispatchEvent(event);
+    }
+  });
+  socket.on('FINISH_READ', () => {
+    document.getElementsByTagName('tri-card-question')[0].remove();
   });
 }, false);
 loginPlaceholder.appendChild(triLogin);

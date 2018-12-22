@@ -6,6 +6,7 @@ class TriRack extends HTMLElement {
     const name = this.getAttribute('name');
     const rack = this.getAttribute('rack');
     this.render(name, rack);
+    this.enableEvents();
   }
 
   addNumbers(root, rack) {
@@ -34,6 +35,16 @@ class TriRack extends HTMLElement {
     this.addNumbers(root, rack);
     this.addName(root, name);
     this.addStyle();
+  }
+
+  enableEvents() {
+    this.addEventListener('HIGHLIGHT', function (e) {
+      if (e.detail) {
+        this.shadowRoot.children[0].classList.add('highlight');
+      } else {
+        this.shadowRoot.children[0].classList.remove('highlight');
+      }
+    });
   }
 
   getStyle() {
@@ -70,6 +81,10 @@ class TriRack extends HTMLElement {
         left: 0;
         z-index: 0;
         border-radius: 10px 10px 5px 5px;
+      }
+
+      .rack.highlight:after {
+        box-shadow: 0 0 20px 10px white;
       }
 
       .name {
