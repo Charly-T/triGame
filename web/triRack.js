@@ -30,7 +30,7 @@ class TriRack extends HTMLElement {
   }
 
   render(name, rack) {
-    var root = div('.rack');
+    const root = div('.rack');
     this.shadowRoot.appendChild(root);
     this.addNumbers(root, rack);
     this.addName(root, name);

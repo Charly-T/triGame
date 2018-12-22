@@ -11,8 +11,13 @@ triLogin.addEventListener('login', function (e) {
     name: e.detail.name
   });
   socket.on('JOINED', (e) => {
-    console.log(e);
-    
+    let event = new CustomEvent('JOINED', {
+      detail: {
+        players: e.players,
+        myself: user
+      }
+    });
+    triLogin.dispatchEvent(event);
   });
   socket.on('GAME_START', (players) => {
     document.getElementsByTagName('tri-login')[0].remove();
@@ -26,7 +31,7 @@ triLogin.addEventListener('login', function (e) {
     socket.emit('ASK_RESOLVE_RESPONSE', 'READ');
   });
   socket.on('READ', (card) => {
-    const question = createElement('tri-card-question', `[question=${card.question}][answer=${card.answer}]${card.waitAnswer ? 'waitsAnswer' : ''}`);
+    const question = createElement('tri-card-question', `[question=${card.question}][answer=${card.answer}][${user === card.reader ? 'reading' : ''}]`);
     question.addEventListener('READ_DONE', function (e) {
       socket.emit('READ_DONE');
     });

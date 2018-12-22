@@ -5,21 +5,24 @@ class TriCardQuestion extends HTMLElement {
     this.createShadowRoot();
     const question = this.getAttribute('question');
     const answer = this.getAttribute('answer');
-    this.render(question, answer);
+    const reading = this.hasAttribute('reading');
+    this.render(question, answer, reading);
   }
 
-  addQuestion(root, question, answer) {
-    var question = div('.question', [question]);
-    var answer = div('.answer', [answer]);
-    var action = div('.action', ['Vale']);
-    action.addEventListener('click', (event) => {
-      event.target.classList.add('active');
-      let readDoneEvent = new CustomEvent('READ_DONE');
-      this.dispatchEvent(readDoneEvent);
-    });
+  addQuestion(root, questionText, answerText, reading) {
+    const question = div('.question', [questionText]);
     root.appendChild(question);
+    const answer = div('.answer', [answerText]);
     root.appendChild(answer);
-    root.appendChild(action);
+    if (!reading) {
+      const action = div('.action', ['Vale']);
+      action.addEventListener('click', (event) => {
+        event.target.classList.add('active');
+        let readDoneEvent = new CustomEvent('READ_DONE');
+        this.dispatchEvent(readDoneEvent);
+      });
+      root.appendChild(action);
+    }
   }
 
   addStyle() {
@@ -28,10 +31,10 @@ class TriCardQuestion extends HTMLElement {
     this.shadowRoot.appendChild(styleTag);
   }
 
-  render(question, answer) {
-    var root = div('.card-question');
+  render(question, answer, reading) {
+    const root = div('.card-question');
     this.shadowRoot.appendChild(root);
-    this.addQuestion(root, question, answer);
+    this.addQuestion(root, question, answer, reading);
     this.addStyle();
   }
 

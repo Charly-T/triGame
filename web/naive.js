@@ -19,7 +19,11 @@ function createElement(tag, modifiers, children) {
     if (attrs) {
       for(let a in attrs) {
         let o = attrs[a].split('=');
-        element.setAttribute(o[0], o[1]);
+        if (o[1]) {
+          element.setAttribute(o[0], o[1]);
+        } else {
+          element.setAttribute(o[0], '');
+        }
       }
     }
   }

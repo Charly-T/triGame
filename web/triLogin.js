@@ -4,15 +4,16 @@ class TriLogin extends HTMLElement {
   connectedCallback() { 
     this.createShadowRoot();
     this.render();
+    this.handleEvents();
   }
 
-  addForm(root) {
-    var loginInput = createElement('input', '[type=text][placeholder=Nombre].login-input');
-    var loginButton = createElement('button', '.login-button', [div('.icon-right')]);
-    root.appendChild(loginInput);
-    root.appendChild(loginButton);
+  addForm() {
+    const loginInput = createElement('input', '[type=text][placeholder=Nombre].login-input');
+    const loginButton = createElement('button', '.login-button', [div('.icon-right')]);
+    this.root.appendChild(div('.login-form', [loginInput, loginButton]));
     loginButton.addEventListener('click', () => {
-      this.login(loginInput);
+      loginButton.setAttribute('disabled', '');
+      this.login(loginInput.value);
     });
   }
 
@@ -22,20 +23,27 @@ class TriLogin extends HTMLElement {
     this.shadowRoot.appendChild(styleTag);
   }
 
-  login(loginInput) {
-    var event = new CustomEvent('login', {
+  login(user) {
+    const event = new CustomEvent('login', {
       detail: {
-        name: loginInput.value
+        name: user
       }
     });
     this.dispatchEvent(event);
   }
 
   render() {
-    var root = div('.login');
-    this.shadowRoot.appendChild(root);
-    this.addForm(root);
+    this.root = div('.login');
+    this.shadowRoot.appendChild(this.root);
+    this.addForm();
     this.addStyle();
+  }
+
+  handleEvents() {
+    this.addEventListener('JOINED', function (e) {
+      this.root.getElementsByClassName('login-form')[0].classList.add('hide');
+      this.root.appendChild(div('.waiting', ['Esperando al resto de jugadores']));
+    });
   }
 
   getStyle() {
@@ -69,6 +77,10 @@ class TriLogin extends HTMLElement {
         box-shadow: 0 0 10px 0px #000000;
         left: calc(50% - 400px / 2);
         top: calc(50% - 150px / 2);
+      }
+
+      .login-form.hide {
+        display: none
       }
 
       .login-input {

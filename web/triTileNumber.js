@@ -24,7 +24,7 @@ class TriTileNumber extends HTMLElement {
   }
 
   addNumber(root, number, color) {
-    var numberDiv = div('.number.' + color.toLowerCase(), [number]);
+    const numberDiv = div('.number.' + color.toLowerCase(), [number]);
     root.appendChild(numberDiv);
   }
 
@@ -35,7 +35,7 @@ class TriTileNumber extends HTMLElement {
   }
 
   render(number, color) {
-    var root = div('.tile-number');
+    const root = div('.tile-number');
     this.shadowRoot.appendChild(root);
     this.addNumber(root, number, color);
     this.addStyle();
