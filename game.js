@@ -76,14 +76,21 @@ class Game {
     });
     if (this.players.length === 4) {
       this.startGame();
-    } else {
+    }
+    for (let i in this.players) {
+      this.players[i].socket.emit('JOINED', {
+        player: player.name,
+        players: this.players.map(item => item.name)
+      });
+    }
+    player.socket.on('CHAT:SEND', (text) => {
       for (let i in this.players) {
-        this.players[i].socket.emit('JOINED', {
+        this.players[i].socket.emit('CHAT:BROADCAST', {
           player: player.name,
-          players: this.players.length
+          text: text.text
         });
       }
-    }
+    });
   }
 
   startGame() {

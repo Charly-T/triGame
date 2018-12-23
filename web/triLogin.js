@@ -42,7 +42,13 @@ class TriLogin extends HTMLElement {
   handleEvents() {
     this.addEventListener('JOINED', function (e) {
       this.root.getElementsByClassName('login-form')[0].classList.add('hide');
-      this.root.appendChild(div('.waiting', ['Esperando al resto de jugadores']));
+      if (this.root.getElementsByClassName('waiting').length === 0) {
+        this.root.appendChild(div('.waiting', ['Esperando al resto de jugadores']));
+      }
+      if (this.root.getElementsByClassName('players').length > 0) {
+        this.root.getElementsByClassName('players')[0].remove();
+      }
+      this.root.appendChild(div('.players', e.detail.players.map(player => div('.player', [player]))));
     });
   }
 

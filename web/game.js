@@ -18,6 +18,24 @@ triLogin.addEventListener('login', function (e) {
       }
     });
     triLogin.dispatchEvent(event);
+    if(e.player === user) {
+      const chat = createElement('tri-chat');
+      chat.addEventListener('CHAT:SEND', (e) => {
+        socket.emit('CHAT:SEND', {
+          text: e.detail.text
+        });
+      });
+      socket.on('CHAT:BROADCAST', (e) => {
+        const event = new CustomEvent('CHAT:BROADCAST', {
+          detail: {
+            player: e.player,
+            text: e.text
+          }
+        });
+        chat.dispatchEvent(event);
+      });
+      document.getElementsByClassName('chat-placeholder')[0].appendChild(chat);
+    }
   });
   socket.on('GAME_START', (players) => {
     document.getElementsByTagName('tri-login')[0].remove();
