@@ -18,43 +18,18 @@ class Game {
     };
     this.io = io;
     this.handleConnections();
-    // this.players.push({
-    //   name: 'Jugador 2',
-    //   socket: {
-    //     emit: () => {
-    //       console.log('dummy emit');
-    //     }
-    //   },
-    //   rack: []
-    // });
-    // this.players.push({
-    //   name: 'Jugador 3',
-    //   socket: {
-    //     emit: () => {
-    //       console.log('dummy emit');
-    //     }
-    //   },
-    //   rack: []
-    // });
-    // this.players.push({
-    //   name: 'Jugador 4',
-    //   socket: {
-    //     emit: () => {
-    //       console.log('dummy emit');
-    //     }
-    //   },
-    //   rack: []
-    // });
   }
   
   handleConnections() {
     this.io.on('connection', (socket) => {
       socket.on('LOGIN', (e) => {
-        console.log(e.name + ' joining room, ' + (this.players.length + 1) + ' players');
+        const room = 'A';
+        socket.join('ROOM:' + room);
+        console.log(`${e.name} joining room ${room}, ${this.players.length + 1} players`);
         this.addPlayer({
           name: e.name,
           socket: socket
-        });
+        }, room);
       });
       socket.on('disconnect', () => {
         let deleteIndex;
@@ -64,44 +39,44 @@ class Game {
             console.log('user ' + this.players[i].name + ' disconnected');
           }
         }
+        // this.io.to('ROOM:' + room).emit('USER_DISCONNECTED', {
+        //   name: this.players[deleteIndex].name
+        // });
         this.players.splice(deleteIndex, 1);
       });
     });
   }
 
-  addPlayer(player) {
+  addPlayer(player, room) {
     this.players.push({
       ...player,
       rack: []
     });
     if (this.players.length === 4) {
-      this.startGame();
+      this.startGame(room);
     }
-    for (let i in this.players) {
-      this.players[i].socket.emit('JOINED', {
-        player: player.name,
-        players: this.players.map(item => item.name)
-      });
-    }
+    this.io.to('ROOM:' + room).emit('JOINED', {
+      player: player.name,
+      players: this.players.map(item => item.name)
+    });
     player.socket.on('CHAT:SEND', (text) => {
-      for (let i in this.players) {
-        this.players[i].socket.emit('CHAT:BROADCAST', {
-          player: player.name,
-          text: text.text
-        });
-      }
+      this.io.to('ROOM:' + room).emit('CHAT:BROADCAST', {
+        player: player.name,
+        text: text.text
+      });
     });
   }
 
-  startGame() {
+  startGame(room) {
     this.dealAll();
     this.nextActivePlayer();
+    
     for (let i in this.players) {
       this.players[i].socket.emit('GAME_START',
         this.players.filter(player => player.name !== this.players[i].name).map(player => ({name: player.name, rack: player.rack}))
       );
     }
-    this.newTurn();
+    this.newTurn(room);
   }
 
   dealAll() {
@@ -118,16 +93,16 @@ class Game {
     }
   }
   
-  askPlayerResolve() {
+  askPlayerResolve(room) {
     this.players[this.turn.activePlayerIndex].socket.emit('ASK_RESOLVE');
     this.players[this.turn.activePlayerIndex].socket.once('ASK_RESOLVE_RESPONSE', (response) => {
       if (response === 'READ') {
-        this.read();
+        this.read(room);
       }
     });
   }
   
-  read() {
+  read(room) {
     let random;
     let question;
     if (this.unreadedQuestions.length === 0) {
@@ -147,62 +122,39 @@ class Game {
       this.turn.ready[this.players[i].name] = false;
     }
     this.turn.ready[reading.name] = true;
+    
+    this.io.to('ROOM:' + room).emit('READ', {
+      question: question.question,
+      answer: answer,
+      reader: reading.name
+    });
     for (let i in this.players) {
-      this.players[i].socket.emit('READ', {
-        question: question.question,
-        answer: answer,
-        reader: reading.name
-      });
       this.players[i].socket.once('READ_DONE', () => {
-        this.readComplete(this.players[i].name);
+        this.readComplete(this.players[i].name, room);
       });
     }
   }
   
-  readComplete(playerName) {
+  readComplete(playerName, room) {
     this.turn.ready[playerName] = true;
     let allReady = true;
     for (let i in this.turn.ready) {
       allReady = allReady && this.turn.ready[i];
     }
     if (allReady) {
-      for (let i in this.players) {
-        this.players[i].socket.emit('FINISH_READ');
-      }
-      this.nextActivePlayer();
-      this.newTurn();
+      this.io.to('ROOM:' + room).emit('FINISH_READ');
+      this.nextActivePlayer(room);
+      this.newTurn(room);
     }
   }
   
-  newTurn() {
-    this.askPlayerResolve();
+  newTurn(room) {
+    this.askPlayerResolve(room);
   }
   
-  nextActivePlayer() {
+  nextActivePlayer(room) {
     this.turn.activePlayerIndex = ++this.turn.activePlayerIndex%this.players.length;
   }
-
-  mockExecution() {
-    dealAll();
-    nextActivePlayer();
-    read();
-    readComplete('Jugador 2');
-    readComplete('Jugador 3');
-    readComplete('Jugador 4');
-    read();
-    readComplete('Jugador 3');
-    readComplete('Jugador 4');
-    readComplete('Jugador 1');
-    read();
-    readComplete('Jugador 4');
-    readComplete('Jugador 1');
-    readComplete('Jugador 2');
-    read();
-    readComplete('Jugador 1');
-    readComplete('Jugador 2');
-    readComplete('Jugador 3');
-  }
-  
 }
 
 module.exports = Game;
