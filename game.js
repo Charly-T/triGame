@@ -3,14 +3,7 @@ const questions = require('./questions');
 class Game {
   constructor(io) {
     this.players = [];
-    this.undealedTiles = [
-      {number: 1, color: 'GREEN'}, {number: 2, color: 'YELLOW'}, {number: 2, color: 'YELLOW'}, {number: 3, color: 'BLACK'}, {number: 3, color: 'BLACK'},
-      {number: 3, color: 'BLACK'}, {number: 4, color: 'BROWN'},  {number: 4, color: 'BROWN'},  {number: 4, color: 'BROWN'}, {number: 4, color: 'BROWN'},
-      {number: 5, color: 'RED'},   {number: 5, color: 'RED'},    {number: 5, color: 'RED'},    {number: 5, color: 'RED'},   {number: 5, color: 'BLACK'},
-      {number: 6, color: 'PINK'},  {number: 6, color: 'PINK'},   {number: 6, color: 'PINK'},   {number: 6, color: 'GREEN'}, {number: 6, color: 'GREEN'},
-      {number: 6, color: 'GREEN'}, {number: 7, color: 'YELLOW'}, {number: 7, color: 'YELLOW'}, {number: 7, color: 'PINK'},  {number: 7, color: 'BLUE'},
-      {number: 7, color: 'BLUE'},  {number: 7, color: 'BLUE'},   {number: 7, color: 'BLUE'},
-    ];
+    this.undealedTiles = this.buildTiles();
     this.unreadedQuestions = questions;
     this.readedQuestions = [];
     this.turn = {
@@ -18,6 +11,17 @@ class Game {
     };
     this.io = io;
     this.handleConnections();
+  }
+
+  buildTiles() {
+    return [
+      {number: 1, color: 'GREEN'}, {number: 2, color: 'YELLOW'}, {number: 2, color: 'YELLOW'}, {number: 3, color: 'BLACK'}, {number: 3, color: 'BLACK'},
+      {number: 3, color: 'BLACK'}, {number: 4, color: 'BROWN'},  {number: 4, color: 'BROWN'},  {number: 4, color: 'BROWN'}, {number: 4, color: 'BROWN'},
+      {number: 5, color: 'RED'},   {number: 5, color: 'RED'},    {number: 5, color: 'RED'},    {number: 5, color: 'RED'},   {number: 5, color: 'BLACK'},
+      {number: 6, color: 'PINK'},  {number: 6, color: 'PINK'},   {number: 6, color: 'PINK'},   {number: 6, color: 'GREEN'}, {number: 6, color: 'GREEN'},
+      {number: 6, color: 'GREEN'}, {number: 7, color: 'YELLOW'}, {number: 7, color: 'YELLOW'}, {number: 7, color: 'PINK'},  {number: 7, color: 'BLUE'},
+      {number: 7, color: 'BLUE'},  {number: 7, color: 'BLUE'},   {number: 7, color: 'BLUE'},
+    ];
   }
   
   handleConnections() {
@@ -68,8 +72,8 @@ class Game {
   }
 
   startGame(room) {
-    this.dealAll();
-    this.nextActivePlayer();
+    this.dealAll(room);
+    this.nextActivePlayer(room);
     
     for (let i in this.players) {
       this.players[i].socket.emit('GAME_START',
@@ -79,7 +83,7 @@ class Game {
     this.newTurn(room);
   }
 
-  dealAll() {
+  dealAll(room) {
     for (let i in this.players) {
       this.deal(this.players[i]);
     }
@@ -129,9 +133,9 @@ class Game {
       reader: reading.name
     });
     for (let i in this.players) {
-      this.players[i].socket.once('READ_DONE', () => {
-        this.readComplete(this.players[i].name, room);
-      });
+        this.players[i].socket.once('READ_DONE', () => {
+          this.readComplete(this.players[i].name, room);
+        });
     }
   }
   
