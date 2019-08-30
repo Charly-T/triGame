@@ -6,6 +6,8 @@
 <font id="fontello" horiz-adv-x="1000" >
 <font-face font-family="fontello" font-weight="400" font-stretch="normal" units-per-em="1000" ascent="850" descent="-150" />
 <missing-glyph horiz-adv-x="1000" />
+<glyph glyph-name="right" unicode="&#xe800;" d="M399 684q31 31 74 31t73-31l334-335-334-334q-30-30-73-30t-74 30q-31 31-31 74t31 74l82 82-377 0q-44 0-74 31t-30 73q0 44 31 74t73 31l377 0-82 82q-31 32-31 75t31 73z" horiz-adv-x="880" />
+
 <glyph glyph-name="cross" unicode="&#xe805;" d="M0 90q0 36 26 62l195 195-195 196q-26 25-26 61t26 61 61 25 61-25l196-196 195 196q25 25 61 25t61-25 25-61-25-61l-195-196 195-195q25-26 25-62t-25-61q-25-25-61-25t-61 25l-195 195-196-195q-25-25-61-25t-61 25q-26 26-26 61z" horiz-adv-x="686.5" />
 
 <glyph glyph-name="square" unicode="&#xf096;" d="M625 707h-464q-37 0-63-26t-27-63v-464q0-37 27-63t63-27h464q37 0 63 27t26 63v464q0 37-26 63t-63 26z m161-89v-464q0-67-47-114t-114-47h-464q-67 0-114 47t-47 114v464q0 66 47 113t114 48h464q66 0 114-48t47-113z" horiz-adv-x="785.7" />

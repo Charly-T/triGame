@@ -1,4 +1,4 @@
-import { div } from './naive.js';
+import { div, createElement } from './naive.js';
 
 class TriSolutionCard extends HTMLElement {
   connectedCallback() {
@@ -58,6 +58,7 @@ class TriSolutionCard extends HTMLElement {
       }
       father.appendChild(row);
     }
+    father.appendChild(createElement('textarea'));
     const actions = [
       div('.action.circle.selected', [
         div('.icon-circle')
@@ -175,6 +176,19 @@ class TriSolutionCard extends HTMLElement {
         content: '\\f1db';
         top: 0px;
         left: 1px;
+      }
+
+      textarea {
+        width: calc(100% - 12px);
+        height: 80px;
+        margin: 10px 0px;
+        border: 1px solid rgba(0, 0, 0, 0.5);
+        border-radius: 5px;
+        resize: none;
+        outline: none;
+        padding: 5px;
+        font-family: 'Raleway', sans-serif;
+        background-color: transparent;
       }
       
       .action-row {

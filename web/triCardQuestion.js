@@ -3,19 +3,26 @@ import { div } from './naive.js';
 class TriCardQuestion extends HTMLElement {
   connectedCallback() {
     this.createShadowRoot();
-    this.render();
+    const question = this.getAttribute('question');
+    const answer = this.getAttribute('answer');
+    const reading = this.hasAttribute('reading');
+    this.render(question, answer, reading);
   }
 
-  addQuestion(root) {
-    var question = div('.question', ['¿En cuántos soportes aparece la misma cifra en colores diferentes? (Por ejemplo, 7 azul y 7 amarillo en un mismo soporte)']);
-    var answer = div('.answer', ['En 2 soportes']);
-    var action = div('.action', ['Vale']);
-    action.addEventListener('click', (event) => {
-      event.target.classList.add('active');
-    });
+  addQuestion(root, questionText, answerText, reading) {
+    const question = div('.question', [questionText]);
     root.appendChild(question);
+    const answer = div('.answer', [answerText]);
     root.appendChild(answer);
-    root.appendChild(action);
+    if (!reading) {
+      const action = div('.action', ['Vale']);
+      action.addEventListener('click', (event) => {
+        event.target.classList.add('active');
+        let readDoneEvent = new CustomEvent('READ_DONE');
+        this.dispatchEvent(readDoneEvent);
+      });
+      root.appendChild(action);
+    }
   }
 
   addStyle() {
@@ -24,10 +31,10 @@ class TriCardQuestion extends HTMLElement {
     this.shadowRoot.appendChild(styleTag);
   }
 
-  render() {
-    var root = div('.card-question');
+  render(question, answer, reading) {
+    const root = div('.card-question');
     this.shadowRoot.appendChild(root);
-    this.addQuestion(root);
+    this.addQuestion(root, question, answer, reading);
     this.addStyle();
   }
 
