@@ -133,9 +133,13 @@ class Game {
       reader: reading.name
     });
     for (let i in this.players) {
+      if (i != this.turn.activePlayerIndex) {
         this.players[i].socket.once('READ_DONE', () => {
           this.readComplete(this.players[i].name, room);
         });
+      } else {
+        this.turn.ready[this.turn.activePlayerIndex] = true;
+      }
     }
   }
   
