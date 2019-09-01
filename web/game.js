@@ -30,7 +30,7 @@ const userJoined = (e) => {
   if (e.player === user) {
     const chat = createElement('tri-chat');
     chat.addEventListener('CHAT:SEND', chatSend);
-    socket.on('CHAT:BROADCAST', chatRecieve);
+    socket.on('CHAT:BROADCAST', (e) => chatRecieve(e, chat));
     document.getElementsByClassName('chat-placeholder')[0].appendChild(chat);
   }
 };
@@ -81,7 +81,7 @@ const chatSend = (e) => {
   });
 };
 
-const chatRecieve = (e) => {
+const chatRecieve = (e, chat) => {
   const event = new CustomEvent('CHAT:BROADCAST', {
     detail: {
       player: e.player,
