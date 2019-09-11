@@ -52,7 +52,7 @@ class TriSolutionCard extends HTMLElement {
     for (let i = 1; i <= 7; i++) {
       const row = div('.row');
       for (let j = 1; j <= i; j++) {
-        const number = div(`.number.number${i}.col${j}`, [i]);
+        const number = div(`.number.number${i}.col${j}`,['']);
         this.addNumberEventListeners(number);
         row.appendChild(number);
       }
@@ -92,10 +92,12 @@ class TriSolutionCard extends HTMLElement {
       .card {
         background-color: #ecf0f1;
         font-family: 'Barlow', sans-serif;
-        width: 300px;
-        height: 400px;
+        width: 100%;
+        max-width: 300px;
+        height: 0;
         border-radius: 5px;
         padding: 5px;
+        padding-bottom: calc(100% * 1.25);
         display: inline-block;
         position: relative;
         box-sizing: border-box;
@@ -103,49 +105,54 @@ class TriSolutionCard extends HTMLElement {
       }
       
       .row {
-        text-align: center;
-        height: 35px;
         user-select: none;
+        display: flex;
+        justify-content: center;
+        position: relative;
       }
       
       .number {
         display: inline-block;
-        width: 35px;
+        width: 10%;
         font-weight: bold;
-        font-size: 30px;
+        font-size: 20px;
         cursor: pointer;
         position: relative;
         user-select: none;
+        background-repeat: no-repeat;
+        background-size: contain;
+        background-position: center;
+        padding-bottom: 10%;
       }
       
-      .number1.col1 { color: var(--number-color-green); }
-      .number2.col1 { color: var(--number-color-yellow); }
-      .number2.col2 { color: var(--number-color-yellow); }
-      .number3.col1 { color: var(--number-color-black); }
-      .number3.col2 { color: var(--number-color-black); }
-      .number3.col3 { color: var(--number-color-black); }
-      .number4.col1 { color: var(--number-color-brown); }
-      .number4.col2 { color: var(--number-color-brown); }
-      .number4.col3 { color: var(--number-color-brown); }
-      .number4.col4 { color: var(--number-color-brown); }
-      .number5.col1 { color: var(--number-color-red); }
-      .number5.col2 { color: var(--number-color-red); }
-      .number5.col3 { color: var(--number-color-red); }
-      .number5.col4 { color: var(--number-color-red); }
-      .number5.col5 { color: var(--number-color-black); }
-      .number6.col1 { color: var(--number-color-pink); }
-      .number6.col2 { color: var(--number-color-pink); }
-      .number6.col3 { color: var(--number-color-pink); }
-      .number6.col4 { color: var(--number-color-green); }
-      .number6.col5 { color: var(--number-color-green); }
-      .number6.col6 { color: var(--number-color-green); }
-      .number7.col1 { color: var(--number-color-yellow); }
-      .number7.col2 { color: var(--number-color-yellow); }
-      .number7.col3 { color: var(--number-color-pink); }
-      .number7.col4 { color: var(--number-color-blue); }
-      .number7.col5 { color: var(--number-color-blue); }
-      .number7.col6 { color: var(--number-color-blue); }
-      .number7.col7 { color: var(--number-color-blue); }
+      .number1.col1 { background-image:url('/web/assets/1G.svg'); }
+      .number2.col1,
+      .number2.col2 { background-image:url('/web/assets/2Y.svg'); }
+      .number3.col1,
+      .number3.col2,
+      .number3.col3 { background-image:url('/web/assets/3B.svg'); }
+      .number4.col1,
+      .number4.col2,
+      .number4.col3,
+      .number4.col4 { background-image:url('/web/assets/4Br.svg'); }
+      .number5.col1,
+      .number5.col2,
+      .number5.col3,
+      .number5.col4 { background-image:url('/web/assets/5R.svg'); }
+      .number5.col5 { background-image:url('/web/assets/5B.svg'); }
+      .number6.col1,
+      .number6.col2,
+      .number6.col3 { background-image:url('/web/assets/6P.svg'); }
+      .number6.col4,
+      .number6.col5,
+      .number6.col6 { background-image:url('/web/assets/6G.svg'); }
+      .number7.col1,
+      .number7.col2 { background-image:url('/web/assets/7Y.svg'); }
+      .number7.col3 { background-image:url('/web/assets/7P.svg'); }
+      .number7.col4,
+      .number7.col5,
+      .number7.col6,
+      .number7.col7 { background-image:url('/web/assets/7Bl.svg'); }
       
       .number.cross:before,
       .number.square:before,

@@ -64,10 +64,13 @@ class TriRack extends HTMLElement {
       }
       
       .rack {
-        width: 280px;
+        width: 100%;
+        max-width: 280px;
         display: inline-block;
         text-align: center;
-        height: 150px;
+        padding: 3%;
+        padding-bottom: 60%;
+        height: 0;
         position: relative;
       }
 
@@ -75,7 +78,7 @@ class TriRack extends HTMLElement {
         content: '';
         position: absolute;
         width: 100%;
-        height: 120px;
+        padding-bottom: 50%;
         background-color: var(--color-black);
         bottom: 0;
         left: 0;
@@ -92,15 +95,27 @@ class TriRack extends HTMLElement {
         z-index: 1;
         position: absolute;
         text-align: center;
-        width: 100%;
+        width: calc(100% - 6%);
         font-family: 'Raleway', sans-serif;
-        font-size: 30px;
-        margin-top: calc(15px/2);
+        font-size: 20px;
+        left: 0;
+        width: 100%;
+        margin-bottom: 5px;
+        bottom: 0;
+      }
+
+      .numbers {
+        display: flex;
+        justify-content: space-evenly;
+        position: absolute;
+        left: 0;
+        width: 100%;
+        height: 40%;
       }
 
       tri-tile-number {
-        margin-left: 10px;
         position: relative;
+        width: 30%;
         z-index: 1;
       }
 

@@ -24,7 +24,7 @@ class TriTileNumber extends HTMLElement {
   }
 
   addNumber(root, number, color) {
-    const numberDiv = div('.number.' + color.toLowerCase(), [number]);
+    const numberDiv = div(`.number.number-${number}-${color.toLowerCase()}`);
     root.appendChild(numberDiv);
   }
 
@@ -60,51 +60,79 @@ class TriTileNumber extends HTMLElement {
       .tile-number {
         background-color: #FFFFFF;
         font-family: 'Barlow', sans-serif;
-        width: 75px;
-        height: 100px;
+        width: 100%;
+        max-width: 75px;
+        height: 0;
+        padding: 0%;
+        padding-bottom: calc(100% * 4 / 3);
         border-radius: 5px;
-        padding: 5px;
         display: inline-block;
         position: relative;
-        font-size: 20px;
-        text-align: justify;
         box-sizing: border-box;
         box-shadow: 0 0 10px 0px #000000;
       }
 
       .number {
-        font-size: 76px;
         text-align: center;
         font-weight: bold;
-        margin-top: -2px;
+        background-repeat: no-repeat;
+        background-size: contain;
+        background-position: center;
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        top: 0;
+        left: 0;
       }
 
-      .green {
-        color: var(--color-dark-green);
+      /*
+      https://fonts.google.com/specimen/Barlow?selection.family=Barlow:700
+      https://amio.github.io/embedded-google-fonts/
+      https://editor.method.ac/
+      */
+
+      .number-1-green {
+        background-image:url('/web/assets/1G.svg');
       }
 
-      .yellow {
-        color: var(--color-yellow);
+      .number-2-yellow {
+        background-image:url('/web/assets/2Y.svg');
       }
 
-      .black {
-        color: var(--color-black);
+      .number-3-black {
+        background-image:url('/web/assets/3B.svg');
       }
 
-      .brown {
-        color: var(--color-brown);
+      .number-4-brown {
+        background-image:url('/web/assets/4Br.svg');
       }
 
-      .red {
-        color: var(--color-red);
+      .number-5-red {
+        background-image:url('/web/assets/5R.svg');
       }
 
-      .pink {
-        color: var(--color-pink);
+      .number-5-black {
+        background-image:url('/web/assets/5B.svg');
       }
 
-      .blue {
-        color: var(--color-blue);
+      .number-6-pink {
+        background-image:url('/web/assets/6P.svg');
+      }
+
+      .number-6-green {
+        background-image:url('/web/assets/6G.svg');
+      }
+
+      .number-7-yellow {
+        background-image:url('/web/assets/7Y.svg');
+      }
+
+      .number-7-pink {
+        background-image:url('/web/assets/7P.svg');
+      }
+
+      .number-7-blue {
+        background-image:url('/web/assets/7Bl.svg');
       }
     `
   }

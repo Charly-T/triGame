@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+  <link rel="stylesheet" href="../style.css">
+</head>
+
+<body>
+  <div class="login-placeholder"></div>
+  <div class="game">
+    <div class="racks-placeholder">
+      <tri-rack name="Player 1" rack="1,GREEN;2,YELLOW;3,BLACK"></tri-rack>
+      <tri-rack name="Player 2" rack="4,BROWN;5,RED;5,BLACK"></tri-rack>
+      <tri-rack name="Player 3" rack="6,GREEN;6,PINK;7,YELLOW"></tri-rack>
+    </div>
+    <div class="card-question-placeholder">
+      <tri-card-question question="question" answer="answer"></tri-card-question>
+    </div>
+    <div class="solution-card-placeholder">
+      <tri-solution-card></tri-solution-card>
+    </div>
+  </div>
+  <div class="chat-placeholder">
+    <!-- <tri-chat></tri-chat> -->
+  </div>
+  <script src="../socket.io.js"></script>
+  <script src="../naive.js" type="module"></script>
+  <script src="../triSolutionCard.js" type="module"></script>
+  <script src="../triCardQuestion.js" type="module"></script>
+  <script src="../triRack.js" type="module"></script>
+  <script src="../triTileNumber.js" type="module"></script>
+  <script src="../triLogin.js" type="module"></script>
+  <script src="../triChat.js" type="module"></script>
+  <script>
+    setTimeout(() => {
+      const e = new CustomEvent('HIGHLIGHT', {
+        detail: true
+      });
+      document.getElementsByTagName('tri-rack')[0].dispatchEvent(e);
+    }, 66);
+  </script>
+</body>
+
+</html>
