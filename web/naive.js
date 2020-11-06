@@ -13,11 +13,11 @@ function createElement(tag, modifiers, children) {
     }
     const id = modifiers.match(/#[a-z0-9\-]+/g);
     if (id) {
-      element.id = id[0];
+      element.id = id[0].substr(1);
     }
     const attrs = modifiers.match(/[^\[\]]+(?=\])/g);
     if (attrs) {
-      for(let a in attrs) {
+      for (let a in attrs) {
         let o = attrs[a].split('=');
         if (o[1]) {
           element.setAttribute(o[0], o[1]);
@@ -27,7 +27,7 @@ function createElement(tag, modifiers, children) {
       }
     }
   }
-  for(let i in children) {
+  for (let i in children) {
     if (children[i] instanceof HTMLElement) {
       element.appendChild(children[i]);
     } else {

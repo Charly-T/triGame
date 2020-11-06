@@ -1,12 +1,17 @@
 import { div, createElement } from './naive.js';
 
 class TriRack extends HTMLElement {
-  connectedCallback() { 
-    this.createShadowRoot();
+  constructor() {
+    super();
+
+    this.shadow = this.attachShadow({ mode: 'open' });
+  }
+
+  connectedCallback() {
+    this.enableEvents();
     const name = this.getAttribute('name');
     const rack = this.getAttribute('rack');
     this.render(name, rack);
-    this.enableEvents();
   }
 
   addNumbers(root, rack) {
@@ -26,12 +31,12 @@ class TriRack extends HTMLElement {
   addStyle() {
     const styleTag = document.createElement('style');
     styleTag.textContent = this.getStyle(this.size);
-    this.shadowRoot.appendChild(styleTag);
+    this.shadow.appendChild(styleTag);
   }
 
   render(name, rack) {
     const root = div('.rack');
-    this.shadowRoot.appendChild(root);
+    this.shadow.appendChild(root);
     this.addNumbers(root, rack);
     this.addName(root, name);
     this.addStyle();
@@ -64,10 +69,11 @@ class TriRack extends HTMLElement {
       }
       
       .rack {
-        width: 280px;
+        width: calc((5rem * 3) + (2rem * 2));
         display: inline-block;
         text-align: center;
-        height: 150px;
+        height: 0;
+        padding-bottom: 50%;
         position: relative;
       }
 
@@ -75,7 +81,7 @@ class TriRack extends HTMLElement {
         content: '';
         position: absolute;
         width: 100%;
-        height: 120px;
+        height: 80%;
         background-color: var(--color-black);
         bottom: 0;
         left: 0;
@@ -94,12 +100,11 @@ class TriRack extends HTMLElement {
         text-align: center;
         width: 100%;
         font-family: 'Raleway', sans-serif;
-        font-size: 30px;
-        margin-top: calc(15px/2);
+        font-size: 2rem;
       }
 
       tri-tile-number {
-        margin-left: 10px;
+        margin-left: 0.8rem;
         position: relative;
         z-index: 1;
       }
@@ -107,15 +112,15 @@ class TriRack extends HTMLElement {
       tri-tile-number:first-child {
         margin-left: 0;
       }
-    `
+    `;
   }
 }
 
 try {
-  customElements.define('tri-rack', TriRack)
+  customElements.define('tri-rack', TriRack);
 } catch (err) {
-  const h3 = document.createElement('h3')
-  h3.innerHTML = "This site uses webcomponents which don't work in all browsers! Try this site in a browser that supports them!"
-  document.body.appendChild(h3)
+  const h3 = document.createElement('h3');
+  h3.innerHTML =
+    "This site uses webcomponents which don't work in all browsers! Try this site in a browser that supports them!";
+  document.body.appendChild(h3);
 }
-
