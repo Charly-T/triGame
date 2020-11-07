@@ -52,7 +52,7 @@ module.exports = [{
     answerFunction: (racks) => {
       const solution = countRacks(
         racks,
-        rack => rack.reduce((prev, tile) => prev + tile.number % 2, 0) % 3);
+        rack => rack.reduce((prev, tile) => prev + tile.number % 2, 0) % 3 === 0);
       return `En ${solution} soporte${solution === 1 ? '' : 's'}`;
     }
   }, {
@@ -92,7 +92,7 @@ module.exports = [{
     answerFunction: (racks) => {
       const tiles = plainTiles(racks);
       const colors = tiles.map(i => i.color);
-      const solution = colors.filter((i, id) => colors.indexOf(i) === i).length;
+      const solution = colors.filter((i, id) => colors.indexOf(i) === id).length;
       return `Veo ${solution} color${solution === 1 ? '' : 'es'}`;
     }
   }, {
@@ -122,7 +122,7 @@ module.exports = [{
     answerFunction: (racks) => {
       const tiles = plainTiles(racks);
       const numbers = tiles.map(i => i.number);
-      const solution = 7 - numbers.filter((i, id) => numbers.indexOf(i) === i).length;
+      const solution = 7 - numbers.filter((i, id) => numbers.indexOf(i) === id).length;
       return `No veo ${solution} cifra${solution === 1 ? '' : 's'}`;
     }
   }, {
