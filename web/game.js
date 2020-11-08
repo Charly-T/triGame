@@ -30,8 +30,8 @@ const userJoined = (e) => {
   if (e.player === user) {
     const chat = createElement('tri-chat');
     chat.addEventListener('CHAT:SEND', chatSend);
-    socket.on('CHAT:BROADCAST', (e) => chatRecieve(e, chat));
-    document.getElementsByClassName('chat-placeholder')[0].appendChild(chat);
+    socket.on('CHAT:BROADCAST', chatRecieve);
+    // document.getElementsByClassName('chat-placeholder')[0].appendChild(chat);
   }
 };
 
@@ -42,6 +42,7 @@ const gameStart = (players) => {
     racks.appendChild(createElement('tri-rack', `[name=${players[i].name}][rack=${players[i].rack.map(item => item.number + ',' + item.color).join(';')}]`));
   }
   document.getElementsByClassName('solution-card-placeholder')[0].appendChild(createElement('tri-solution-card'));
+  recalcSolutionCard();
 };
 
 const resolveAsk = () => {
@@ -51,7 +52,6 @@ const resolveAsk = () => {
 const readQuestion = (card) => {
   const question = createElement('tri-card-question', `[question=${card.question}][answer=${card.answer}][${user === card.reader ? 'reading' : ''}]`);
   const readDone = (e) => {
-    console.log('Read is really done? i\'m', user, (new Date().getTime()));
     socket.emit('READ_DONE');
   };
   question.addEventListener('READ_DONE', readDone);
@@ -69,6 +69,7 @@ const readQuestion = (card) => {
     });
     document.querySelector(`tri-rack[name=${card.reader}]`).dispatchEvent(event);
   }
+  recalcSolutionCard();
 };
 
 const readFinish = () => {
@@ -90,5 +91,13 @@ const chatRecieve = (e, chat) => {
   });
   chat.dispatchEvent(event);
 };
+
+const recalcSolutionCard = () => {
+  const totalHeight = window.innerHeight;
+  const racksHeight = document.getElementsByClassName('racks-placeholder')[0].clientHeight;
+  const questionHeight = document.getElementsByClassName('card-question-placeholder')[0].clientHeight;
+  const heightLeft = totalHeight - racksHeight - questionHeight - 16;
+  document.getElementsByClassName('solution-card-placeholder')[0].style.fontSize = Math.floor(0.0390625 * heightLeft) + 'px';
+}
 
 loginPlaceholder.appendChild(triLogin);

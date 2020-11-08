@@ -90,9 +90,9 @@ class TriSolutionCard extends HTMLElement {
         --number-color-green: #27ae60;
         --number-color-yellow: #f1c40f;
         --number-color-black: #000000;
-        --number-color-brown: #d35400;
-        --number-color-red: #e74c3c;
-        --number-color-pink: #9b59b6;
+        --number-color-brown: #855332;
+        --number-color-red: #df0000;
+        --number-color-pink: #f21fce;
         --number-color-blue: #3498db;
       }
       

@@ -66,9 +66,9 @@ class TriLogin extends HTMLElement {
         --color-dark-green: #27ae60;
         --color-yellow: #f1c40f;
         --color-black: #000000;
-        --color-brown: #d35400;
-        --color-red: #e74c3c;
-        --color-pink: #9b59b6;
+        --color-brown: #855332;
+        --color-red: #df0000;
+        --color-pink: #f21fce;
         --color-blue: #3498db;
         --color-dark-blue: #2980b9;
         --color-light-grey: #ecf0f1;

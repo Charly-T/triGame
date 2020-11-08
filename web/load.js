@@ -4,4 +4,8 @@ function loadedBody() {
   const questionHeight = document.getElementsByClassName('card-question-placeholder')[0].clientHeight;
   const heightLeft = totalHeight - racksHeight - questionHeight - 16;
   document.getElementsByClassName('solution-card-placeholder')[0].style.fontSize = Math.floor(0.0390625 * heightLeft) + 'px';
+
+  window.onbeforeunload = () => {
+    return "¿Estas seguro de abandonar esta página?";
+  }
 }

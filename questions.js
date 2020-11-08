@@ -96,7 +96,7 @@ module.exports = [{
       return `Veo ${solution} color${solution === 1 ? '' : 'es'}`;
     }
   }, {
-    _id: 9, question: '¿En cuántos colores ves al menos tres veces?',
+    _id: 9, question: '¿Cuántos colores ves al menos tres veces?',
     answerFunction: (racks) => {
       const tiles = plainTiles(racks);
       const count = {};
