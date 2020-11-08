@@ -1,9 +1,14 @@
 import { div, createElement } from './naive.js';
 
 class TriChat extends HTMLElement {
-  connectedCallback() { 
-    this.createShadowRoot();
+  constructor() {
+    super();
+
+    this.shadow = this.attachShadow({ mode: 'open' });
     this.render();
+  }
+
+  connectedCallback() {
     this.handleEvents();
   }
 
@@ -12,7 +17,7 @@ class TriChat extends HTMLElement {
     this.root.appendChild(messages);
     const form = createElement('form', '', [
       createElement('input', '[type=text]'),
-      createElement('input', '[type=submit][value=↵]')
+      createElement('input', '[type=submit][value=↵]'),
     ]);
     form.addEventListener('submit', (e) => {
       e.preventDefault();
@@ -29,7 +34,7 @@ class TriChat extends HTMLElement {
   addStyle() {
     const styleTag = document.createElement('style');
     styleTag.textContent = this.getStyle(this.size);
-    this.shadowRoot.appendChild(styleTag);
+    this.shadow.appendChild(styleTag);
   }
 
   sendMessage(text) {
@@ -43,7 +48,7 @@ class TriChat extends HTMLElement {
 
   render() {
     this.root = div('.chat');
-    this.shadowRoot.appendChild(this.root);
+    this.shadow.appendChild(this.root);
     this.addChat();
     this.addStyle();
   }
@@ -51,16 +56,18 @@ class TriChat extends HTMLElement {
   handleEvents() {
     this.addEventListener('CHAT:BROADCAST', (e) => {
       const messages = this.root.getElementsByClassName('messages')[0];
-      messages.appendChild(div('', [
-        createElement('b', '', [
-          createElement('i', '', [
-            `${e.detail.player}:`
+      messages.appendChild(
+        div('', [
+          createElement('b', '', [
+            createElement('i', '', [
+              `${e.detail.player}:`
+            ])
+          ]),
+          createElement('span', '', [
+            `${e.detail.text}`
           ])
-        ]),
-        createElement('span', '', [
-          `${e.detail.text}`
-        ]),
-      ]));
+        ])
+      );
       messages.scrollTop = messages.scrollHeight;
     });
   }
@@ -125,15 +132,14 @@ class TriChat extends HTMLElement {
         position: absolute;
         outline: none;
       }
-    `
+    `;
   }
 }
 
 try {
-  customElements.define('tri-chat', TriChat)
+  customElements.define('tri-chat', TriChat);
 } catch (err) {
-  const h3 = document.createElement('h3')
-  h3.innerHTML = "This site uses webcomponents which don't work in all browsers! Try this site in a browser that supports them!"
-  document.body.appendChild(h3)
+  const h3 = document.createElement('h3');
+  h3.innerHTML = "This site uses webcomponents which don't work in all browsers! Try this site in a browser that supports them!";
+  document.body.appendChild(h3);
 }
-

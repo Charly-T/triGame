@@ -1,21 +1,28 @@
 import { div, createElement } from './naive.js';
 
 class TriSolutionCard extends HTMLElement {
-  connectedCallback() {
-    this.createShadowRoot();
+  constructor() {
+    super();
+
+    this.shadow = this.attachShadow({ mode: 'open' });
     this.render();
   }
+
+  connectedCallback() {}
 
   addStyle() {
     const styleTag = document.createElement('style');
     styleTag.textContent = this.getStyle(this.size);
-    this.shadowRoot.appendChild(styleTag);
+    this.shadow.appendChild(styleTag);
   }
 
   addNumberEventListeners(number) {
-    number.addEventListener('click', () => {
+    number.addEventListener('click', (event) => {
       const selectedAction = this.shadowRoot.children[0].getElementsByClassName('selected')[0];
-      const selected = selectedAction.className.replace('action', '').replace('selected', '').trim();
+      const selected = selectedAction.className
+        .replace('action', '')
+        .replace('selected', '')
+        .trim();
       let wasActive = event.target.classList.contains(selected);
       event.target.classList
         .remove('circle');
@@ -30,7 +37,7 @@ class TriSolutionCard extends HTMLElement {
   }
 
   addActionEventListeners(actions) {
-    for (let action of actions) { 
+    for (let action of actions) {
       action.addEventListener('click', () => {
         for (let element of actions) {
           element.classList.remove('selected');
@@ -43,7 +50,7 @@ class TriSolutionCard extends HTMLElement {
   render() {
     const div = document.createElement('div');
     div.classList.add('card');
-    this.shadowRoot.appendChild(div);
+    this.shadow.appendChild(div);
     this.addNumbers(div);
     this.addStyle();
   }
@@ -69,7 +76,7 @@ class TriSolutionCard extends HTMLElement {
       div('.action.cross', [
         div('.icon-cross')
       ])
-    ]
+    ];
     this.addActionEventListeners(actions);
     const rowAction = div('.row.action-row', actions);
     father.appendChild(rowAction);
@@ -92,10 +99,10 @@ class TriSolutionCard extends HTMLElement {
       .card {
         background-color: #ecf0f1;
         font-family: 'Barlow', sans-serif;
-        width: 300px;
-        height: 400px;
+        width: 20em;
+        height: 0;
         border-radius: 5px;
-        padding: 5px;
+        padding-bottom: 120%;
         display: inline-block;
         position: relative;
         box-sizing: border-box;
@@ -103,19 +110,28 @@ class TriSolutionCard extends HTMLElement {
       }
       
       .row {
-        text-align: center;
-        height: 35px;
+        height: 2em;
         user-select: none;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+
+      .row:first-child {
+        margin-top: 0.5em;
       }
       
       .number {
         display: inline-block;
-        width: 35px;
+        width: 1em;
         font-weight: bold;
-        font-size: 30px;
+        font-size: 2em;
         cursor: pointer;
         position: relative;
         user-select: none;
+        display: flex;
+        align-items: center;
+        justify-content: center;
       }
       
       .number1.col1 { color: var(--number-color-green); }
@@ -156,53 +172,54 @@ class TriSolutionCard extends HTMLElement {
         -webkit-font-smoothing: antialiased;
         -moz-osx-font-smoothing: grayscale;
         position: absolute;
-        font-size: 38px;
+        font-size: 1em;
         color: black;
       }
       
       .number.cross:before {
         content: '\\e805';
-        top: 1px;
-        left: 5px;
       }
       
       .number.square:before {
+        font-size: 1.2em;
+        top: 0.1em;
         content: '\\f096';
-        top: 2px;
-        left: 3px;
       }
       
       .number.circle:before {
+        font-size: 1.2em;
         content: '\\f1db';
-        top: 0px;
-        left: 1px;
       }
 
       textarea {
-        width: calc(100% - 12px);
-        height: 80px;
-        margin: 10px 0px;
+        width: calc(100% - 2em);
+        height: 5em;
+        margin: 1em;
         border: 1px solid rgba(0, 0, 0, 0.5);
         border-radius: 5px;
         resize: none;
         outline: none;
-        padding: 5px;
+        padding: 0.5em;
         font-family: 'Raleway', sans-serif;
         background-color: transparent;
+        box-sizing: border-box;
+        font-size: 1em;
       }
       
       .action-row {
-        height: 48px;
+        height: 2em;
         position: absolute;
-        bottom: 5px;
-        width: calc(100% - 10px);
+        bottom: 0.5em;
         user-select: none;
+        width: 100%;
       }
       
       .action {
-        width: 40px;
-        height: 48px;
-        display: inline-block;
+        width: 2em;
+        height: 1em;
+        display: flex;
+        align-items: center;
+        justify-content: center;
         cursor: pointer;
         user-select: none;
       }
@@ -214,24 +231,17 @@ class TriSolutionCard extends HTMLElement {
       .action.cross,
       .action.circle,
       .action.square {
-        font-size: 40px;
+        font-size: 2em;
       }
-      
-      .scratch {
-        width: 30px;
-        height: 30px;
-        background-image: url('./doodles-36-512.png');
-        background-size: cover;
-      }
-    `
+    `;
   }
 }
 
 try {
-  customElements.define('tri-solution-card', TriSolutionCard)
+  customElements.define('tri-solution-card', TriSolutionCard);
 } catch (err) {
-  const h3 = document.createElement('h3')
-  h3.innerHTML = "This site uses webcomponents which don't work in all browsers! Try this site in a browser that supports them!"
-  document.body.appendChild(h3)
+  const h3 = document.createElement('h3');
+  h3.innerHTML =
+    "This site uses webcomponents which don't work in all browsers! Try this site in a browser that supports them!";
+  document.body.appendChild(h3);
 }
-

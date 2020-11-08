@@ -1,8 +1,13 @@
 import { div } from './naive.js';
 
 class TriCardQuestion extends HTMLElement {
+  constructor() {
+    super();
+
+    this.shadow = this.attachShadow({ mode: 'open' });
+  }
+
   connectedCallback() {
-    this.createShadowRoot();
     const question = this.getAttribute('question');
     const answer = this.getAttribute('answer');
     const reading = this.hasAttribute('reading');
@@ -28,12 +33,12 @@ class TriCardQuestion extends HTMLElement {
   addStyle() {
     const styleTag = document.createElement('style');
     styleTag.textContent = this.getStyle(this.size);
-    this.shadowRoot.appendChild(styleTag);
+    this.shadow.appendChild(styleTag);
   }
 
   render(question, answer, reading) {
     const root = div('.card-question');
-    this.shadowRoot.appendChild(root);
+    this.shadow.appendChild(root);
     this.addQuestion(root, question, answer, reading);
     this.addStyle();
   }
@@ -57,37 +62,40 @@ class TriCardQuestion extends HTMLElement {
       .card-question {
         background-color: #000000;
         font-family: 'Raleway', sans-serif;
-        width: 400px;
-        height: 300px;
+        height: 20rem;
         border-radius: 5px;
-        padding: 25px;
-        display: inline-block;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
         position: relative;
         color: white;
-        font-size: 20px;
+        font-size: 1.3rem;
         text-align: justify;
         box-sizing: border-box;
         box-shadow: 0 0 10px 0px #000000;
       }
 
+      .question {
+        padding: 1rem;
+      }
+
       .answer {
-        font-size: 40px;
+        font-size: 3rem;
         color: var(--color-green);
         text-align: center;
-        margin: 10px;
+        padding: 1rem;
         font-weight: bold;
       }
 
       .action {
-        width: 150px;
+        width: 10rem;
         box-sizing: border-box;
-        padding: 10px;
+        padding: 0.5rem;
         border-radius: 5px;
         text-align: center;
         margin: 0 auto;
         position: absolute;
-        left: calc(50% - 150px / 2);
-        bottom: 25px;
+        bottom: 2rem;
         color: #000000;
         background-color: var(--color-green);
         border: 2px solid var(--color-dark-green);
@@ -100,15 +108,14 @@ class TriCardQuestion extends HTMLElement {
         border: 2px solid var(--color-dark-blue);
         cursor: not-allowed;
       }
-    `
+    `;
   }
 }
 
 try {
-  customElements.define('tri-card-question', TriCardQuestion)
+  customElements.define('tri-card-question', TriCardQuestion);
 } catch (err) {
-  const h3 = document.createElement('h3')
-  h3.innerHTML = "This site uses webcomponents which don't work in all browsers! Try this site in a browser that supports them!"
-  document.body.appendChild(h3)
+  const h3 = document.createElement('h3');
+  h3.innerHTML = "This site uses webcomponents which don't work in all browsers! Try this site in a browser that supports them!";
+  document.body.appendChild(h3);
 }
-

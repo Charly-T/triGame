@@ -1,9 +1,14 @@
 import { div, createElement } from './naive.js';
 
 class TriLogin extends HTMLElement {
-  connectedCallback() { 
-    this.createShadowRoot();
+  constructor() {
+    super();
+
+    this.shadow = this.attachShadow({ mode: 'open' });
     this.render();
+  }
+
+  connectedCallback() {
     this.handleEvents();
   }
 
@@ -20,7 +25,7 @@ class TriLogin extends HTMLElement {
   addStyle() {
     const styleTag = document.createElement('style');
     styleTag.textContent = this.getStyle(this.size);
-    this.shadowRoot.appendChild(styleTag);
+    this.shadow.appendChild(styleTag);
   }
 
   login(user) {
@@ -34,7 +39,7 @@ class TriLogin extends HTMLElement {
 
   render() {
     this.root = div('.login');
-    this.shadowRoot.appendChild(this.root);
+    this.shadow.appendChild(this.root);
     this.addForm();
     this.addStyle();
   }
@@ -112,15 +117,14 @@ class TriLogin extends HTMLElement {
         cursor: pointer;
         outline: none;
       }
-    `
+    `;
   }
 }
 
 try {
-  customElements.define('tri-login', TriLogin)
+  customElements.define('tri-login', TriLogin);
 } catch (err) {
-  const h3 = document.createElement('h3')
-  h3.innerHTML = "This site uses webcomponents which don't work in all browsers! Try this site in a browser that supports them!"
-  document.body.appendChild(h3)
+  const h3 = document.createElement('h3');
+  h3.innerHTML = "This site uses webcomponents which don't work in all browsers! Try this site in a browser that supports them!";
+  document.body.appendChild(h3);
 }
-

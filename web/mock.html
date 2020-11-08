@@ -11,13 +11,19 @@
 
 <body onload="loadedBody()">
   <div class="login-placeholder"></div>
-  <div class="racks-placeholder"></div>
-  <div class="card-question-placeholder"></div>
-  <div class="solution-card-placeholder"></div>
+  <div class="racks-placeholder">
+    <tri-rack name="a" rack="1,GREEN;2,YELLOW;3,BLACK"></tri-rack>
+    <tri-rack name="a" rack="4,BROWN;5,RED;6,GREEN"></tri-rack>
+    <tri-rack name="a" rack="6,PINK;7,YELLOW;7,BLUE"></tri-rack>
+  </div>
+  <div class="card-question-placeholder">
+    <tri-card-question question="¿En cuántos soportes aparece la misma cifra en colores diferentes? (Por ejemplo, 7 azul y 7 amarillo en un mismo soporte)" answer="En 1 soporte"></tri-card-question>
+  </div>
+  <div class="solution-card-placeholder">
+    <tri-solution-card></tri-solution-card>
+  </div>
   <div class="chat-placeholder"></div>
-  <script src="./socket.io.js"></script>
   <script src="./load.js"></script>
-  <script src="./game.js" type="module"></script>
   <script src="./naive.js" type="module"></script>
   <script src="./triSolutionCard.js" type="module"></script>
   <script src="./triCardQuestion.js" type="module"></script>

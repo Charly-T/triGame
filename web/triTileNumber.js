@@ -1,8 +1,14 @@
 import { div } from './naive.js';
+import { Style } from './styleTag.js';
 
 class TriTileNumber extends HTMLElement {
-  connectedCallback() { 
-    this.createShadowRoot();
+  constructor() {
+    super();
+
+    this.shadow = this.attachShadow({ mode: 'open' });
+  }
+
+  connectedCallback() {
     const number = this.getAttribute('number');
     const color = this.getAttribute('color');
     if (this.validateNumber(number, color)) {
@@ -12,13 +18,13 @@ class TriTileNumber extends HTMLElement {
 
   validateNumber(number, color) {
     const valid = {
-      '1': ['GREEN'],
-      '2': ['YELLOW'],
-      '3': ['BLACK'],
-      '4': ['BROWN'],
-      '5': ['RED', 'BLACK'],
-      '6': ['PINK', 'GREEN'],
-      '7': ['YELLOW', 'PINK', 'BLUE']
+      1: ['GREEN'],
+      2: ['YELLOW'],
+      3: ['BLACK'],
+      4: ['BROWN'],
+      5: ['RED', 'BLACK'],
+      6: ['PINK', 'GREEN'],
+      7: ['YELLOW', 'PINK', 'BLUE'],
     };
     return valid[number].indexOf(color) !== -1;
   }
@@ -29,92 +35,78 @@ class TriTileNumber extends HTMLElement {
   }
 
   addStyle() {
-    const styleTag = document.createElement('style');
-    styleTag.textContent = this.getStyle(this.size);
-    this.shadowRoot.appendChild(styleTag);
+    this.shadow.appendChild(this.getStyle(this.size));
   }
 
   render(number, color) {
     const root = div('.tile-number');
-    this.shadowRoot.appendChild(root);
+    this.shadow.appendChild(root);
     this.addNumber(root, number, color);
     this.addStyle();
   }
 
   getStyle() {
-    return `
-      :host {
-        --color-green: #2ecc71;
-        --color-dark-green: #27ae60;
-        --color-yellow: #f1c40f;
-        --color-black: #000000;
-        --color-brown: #d35400;
-        --color-red: #e74c3c;
-        --color-pink: #9b59b6;
-        --color-blue: #3498db;
-        --color-dark-blue: #2980b9;
-        --color-light-grey: #ecf0f1;
-        --color-dark-grey: #7f8c8d;
-      }
+    return new Style({
+      '.tile-number': {
+        'background-color': '#FFFFFF',
+        'font-family': '"Barlow", sans-serif',
+        width: '5rem',
+        height: '0',
+        'border-radius': '5px',
+        'padding-bottom': '35%',
+        display: 'inline-block',
+        position: 'relative',
+        'box-sizing': 'border-box',
+        'box-shadow': '0 0 10px 0px #000000',
+      },
 
-      .tile-number {
-        background-color: #FFFFFF;
-        font-family: 'Barlow', sans-serif;
-        width: 75px;
-        height: 100px;
-        border-radius: 5px;
-        padding: 5px;
-        display: inline-block;
-        position: relative;
-        font-size: 20px;
-        text-align: justify;
-        box-sizing: border-box;
-        box-shadow: 0 0 10px 0px #000000;
-      }
+      '.number': {
+        'font-size': '5rem',
+        'font-weight': 'bold',
+        width: '100%',
+        height: '100%',
+        display: 'flex',
+        'align-items': 'center',
+        'justify-content': 'center',
+        position: 'absolute',
+      },
 
-      .number {
-        font-size: 76px;
-        text-align: center;
-        font-weight: bold;
-        margin-top: -2px;
-      }
+      '.green': {
+        color: 'var(--color-dark-green)',
+      },
 
-      .green {
-        color: var(--color-dark-green);
-      }
+      '.yellow': {
+        color: 'var(--color-yellow)',
+      },
 
-      .yellow {
-        color: var(--color-yellow);
-      }
+      '.black': {
+        color: 'var(--color-black)',
+      },
 
-      .black {
-        color: var(--color-black);
-      }
+      '.brown': {
+        color: 'var(--color-brown)',
+      },
 
-      .brown {
-        color: var(--color-brown);
-      }
+      '.red': {
+        color: 'var(--color-red)',
+      },
 
-      .red {
-        color: var(--color-red);
-      }
+      '.pink': {
+        color: 'var(--color-pink)',
+      },
 
-      .pink {
-        color: var(--color-pink);
-      }
-
-      .blue {
-        color: var(--color-blue);
-      }
-    `
+      '.blue': {
+        color: 'var(--color-blue)',
+      },
+    }).toStyleElement();
   }
 }
 
 try {
-  customElements.define('tri-tile-number', TriTileNumber)
+  customElements.define('tri-tile-number', TriTileNumber);
 } catch (err) {
-  const h3 = document.createElement('h3')
-  h3.innerHTML = "This site uses webcomponents which don't work in all browsers! Try this site in a browser that supports them!"
-  document.body.appendChild(h3)
+  const h3 = document.createElement('h3');
+  h3.innerHTML =
+    "This site uses webcomponents which don't work in all browsers! Try this site in a browser that supports them!";
+  document.body.appendChild(h3);
 }
-
