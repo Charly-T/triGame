@@ -9,13 +9,14 @@
   <link rel="stylesheet" href="./style.css">
 </head>
 
-<body>
+<body onload="loadedBody()">
   <div class="login-placeholder"></div>
   <div class="racks-placeholder"></div>
   <div class="card-question-placeholder"></div>
   <div class="solution-card-placeholder"></div>
   <div class="chat-placeholder"></div>
   <script src="./socket.io.js"></script>
+  <script src="./load.js"></script>
   <script src="./game.js" type="module"></script>
   <script src="./naive.js" type="module"></script>
   <script src="./triSolutionCard.js" type="module"></script>

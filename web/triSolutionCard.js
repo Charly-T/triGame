@@ -99,7 +99,7 @@ class TriSolutionCard extends HTMLElement {
       .card {
         background-color: #ecf0f1;
         font-family: 'Barlow', sans-serif;
-        width: 20rem;
+        width: 20em;
         height: 0;
         border-radius: 5px;
         padding-bottom: 120%;
@@ -110,7 +110,7 @@ class TriSolutionCard extends HTMLElement {
       }
       
       .row {
-        height: 2rem;
+        height: 2em;
         user-select: none;
         display: flex;
         justify-content: center;
@@ -118,14 +118,14 @@ class TriSolutionCard extends HTMLElement {
       }
 
       .row:first-child {
-        margin-top: 0.5rem;
+        margin-top: 0.5em;
       }
       
       .number {
         display: inline-block;
-        width: 2rem;
+        width: 1em;
         font-weight: bold;
-        font-size: 2rem;
+        font-size: 2em;
         cursor: pointer;
         position: relative;
         user-select: none;
@@ -172,7 +172,7 @@ class TriSolutionCard extends HTMLElement {
         -webkit-font-smoothing: antialiased;
         -moz-osx-font-smoothing: grayscale;
         position: absolute;
-        font-size: 2rem;
+        font-size: 1em;
         color: black;
       }
       
@@ -182,7 +182,7 @@ class TriSolutionCard extends HTMLElement {
       
       .number.square:before {
         font-size: 1.2em;
-        top: 0.1rem;
+        top: 0.1em;
         content: '\\f096';
       }
       
@@ -192,30 +192,31 @@ class TriSolutionCard extends HTMLElement {
       }
 
       textarea {
-        width: calc(100% - 2rem);
-        height: 5rem;
-        margin: 1rem;
+        width: calc(100% - 2em);
+        height: 5em;
+        margin: 1em;
         border: 1px solid rgba(0, 0, 0, 0.5);
         border-radius: 5px;
         resize: none;
         outline: none;
-        padding: 0.5rem;
+        padding: 0.5em;
         font-family: 'Raleway', sans-serif;
         background-color: transparent;
         box-sizing: border-box;
+        font-size: 1em;
       }
       
       .action-row {
-        height: 2rem;
+        height: 2em;
         position: absolute;
-        bottom: 0.5rem;
+        bottom: 0.5em;
         user-select: none;
         width: 100%;
       }
       
       .action {
-        width: 2rem;
-        height: 2rem;
+        width: 2em;
+        height: 1em;
         display: flex;
         align-items: center;
         justify-content: center;
@@ -230,7 +231,7 @@ class TriSolutionCard extends HTMLElement {
       .action.cross,
       .action.circle,
       .action.square {
-        font-size: 2rem;
+        font-size: 2em;
       }
     `;
   }

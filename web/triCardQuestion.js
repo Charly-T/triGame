@@ -62,10 +62,8 @@ class TriCardQuestion extends HTMLElement {
       .card-question {
         background-color: #000000;
         font-family: 'Raleway', sans-serif;
-        width: 30rem;
-        height: 0;
+        height: 20rem;
         border-radius: 5px;
-        padding-bottom: 60%;
         display: flex;
         flex-direction: column;
         align-items: center;

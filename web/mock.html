@@ -9,7 +9,7 @@
   <link rel="stylesheet" href="./style.css">
 </head>
 
-<body>
+<body onload="loadedBody()">
   <div class="login-placeholder"></div>
   <div class="racks-placeholder">
     <tri-rack name="a" rack="1,GREEN;2,YELLOW;3,BLACK"></tri-rack>
@@ -23,6 +23,7 @@
     <tri-solution-card></tri-solution-card>
   </div>
   <div class="chat-placeholder"></div>
+  <script src="./load.js"></script>
   <script src="./naive.js" type="module"></script>
   <script src="./triSolutionCard.js" type="module"></script>
   <script src="./triCardQuestion.js" type="module"></script>
