@@ -28,10 +28,7 @@ const userJoined = (e) => {
   });
   triLogin.dispatchEvent(event);
   if (e.player === user) {
-    const chat = createElement('tri-chat');
-    chat.addEventListener('CHAT:SEND', chatSend);
-    socket.on('CHAT:BROADCAST', chatRecieve);
-    // document.getElementsByClassName('chat-placeholder')[0].appendChild(chat);
+    initChat();
   }
 };
 
@@ -75,6 +72,14 @@ const readQuestion = (card) => {
 const readFinish = () => {
   document.getElementsByTagName('tri-card-question')[0].remove();
 };
+
+/* CHAT */
+const initChat = () => {
+  const chat = createElement('tri-chat');
+  chat.addEventListener('CHAT:SEND', chatSend);
+  socket.on('CHAT:BROADCAST', chatRecieve);
+  // document.getElementsByClassName('chat-placeholder')[0].appendChild(chat);
+}
 
 const chatSend = (e) => {
   socket.emit('CHAT:SEND', {

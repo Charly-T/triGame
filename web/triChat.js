@@ -1,4 +1,4 @@
-import { div, createElement } from './naive.js';
+import { div, createElement, style } from './naive.js';
 
 class TriChat extends HTMLElement {
   constructor() {
@@ -32,9 +32,7 @@ class TriChat extends HTMLElement {
   }
 
   addStyle() {
-    const styleTag = document.createElement('style');
-    styleTag.textContent = this.getStyle(this.size);
-    this.shadow.appendChild(styleTag);
+    this.shadow.appendChild(this.getStyle());
   }
 
   sendMessage(text) {
@@ -73,66 +71,65 @@ class TriChat extends HTMLElement {
   }
 
   getStyle() {
-    return `
-
-      :host {
-        --color-green: #2ecc71;
-        --color-dark-green: #27ae60;
-        --color-yellow: #f1c40f;
-        --color-black: #000000;
-        --color-brown: #855332;
-        --color-red: #df0000;
-        --color-pink: #f21fce;
-        --color-blue: #3498db;
-        --color-dark-blue: #2980b9;
-        --color-light-grey: #ecf0f1;
-        --color-dark-grey: #7f8c8d;
-      }
+    return style({
+      ':host': {
+        '--color-green': '#2ecc71',
+        '--color-dark-green': '#27ae60',
+        '--color-yellow': '#f1c40f',
+        '--color-black': '#000000',
+        '--color-brown': '#855332',
+        '--color-red': '#df0000',
+        '--color-pink': '#f21fce',
+        '--color-blue': '#3498db',
+        '--color-dark-blue': '#2980b9',
+        '--color-light-grey': '#ecf0f1',
+        '--color-dark-grey': '#7f8c8d'
+      },
       
-      .chat {
-        background-color: var(--color-light-grey);
-        position: absolute;
-        right: 0;
-        bottom: 0;
-        width: 300px;
-        height: 250px;
-        border-top-left-radius: 5px;
-      }
+      '.chat': {
+        backgroundColor: 'var(--color-light-grey)',
+        position: 'absolute',
+        right: '0',
+        bottom: '0',
+        width: '300px',
+        height: '250px',
+        borderTopLeftRadius: '5px'
+      },
 
-      .messages {
-        width: 100%;
-        height: calc(250px - 31px);
-        overflow-y: auto;
-      }
+      '.messages': {
+        width: '100%',
+        height: 'calc(250px - 31px)',
+        overflowY: 'auto'
+      },
 
-      .chat-box {
-        height: 31px;
-        position: absolute;
-        bottom: 0;
-        width: 100%;
-      }
+      '.chat-box': {
+        height: '31px',
+        position: 'absolute',
+        bottom: '0',
+        width: '100%'
+      },
 
-      .chat-box input[type="text"] {
-        width: calc(100% - 30px);
-        border: none;
-        border-top: 1px solid grey;
-        height: 100%;
-        font-size: 24px;
-        padding-left: 5px;
-        box-sizing: border-box;
-        outline: none;
-        background-color: transparent;
-      }
+      '.chat-box input[type="text"]': {
+        width: 'calc(100% - 30px)',
+        border: 'none',
+        borderTop: '1px solid grey',
+        height: '100%',
+        fontSize: '24px',
+        paddingLeft: '5px',
+        boxSizing: 'border-box',
+        outline: 'none',
+        backgroundColor: 'transparent'
+      },
       
-      .chat-box input[type="submit"] {
-        width: 30px;
-        border: none;
-        background-color: var(--color-green);
-        height: 100%;
-        position: absolute;
-        outline: none;
+      '.chat-box input[type="submit"]': {
+        width: '30px',
+        border: 'none',
+        backgroundColor: 'var(--color-green)',
+        height: '100%',
+        position: 'absolute',
+        outline: 'none'
       }
-    `;
+    });
   }
 }
 

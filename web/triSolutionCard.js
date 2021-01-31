@@ -1,4 +1,4 @@
-import { div, createElement } from './naive.js';
+import { div, createElement, style } from './naive.js';
 
 class TriSolutionCard extends HTMLElement {
   constructor() {
@@ -11,9 +11,7 @@ class TriSolutionCard extends HTMLElement {
   connectedCallback() {}
 
   addStyle() {
-    const styleTag = document.createElement('style');
-    styleTag.textContent = this.getStyle(this.size);
-    this.shadow.appendChild(styleTag);
+    this.shadow.appendChild(this.getStyle());
   }
 
   addNumberEventListeners(number) {
@@ -48,11 +46,23 @@ class TriSolutionCard extends HTMLElement {
   }
 
   render() {
-    const div = document.createElement('div');
-    div.classList.add('card');
-    this.shadow.appendChild(div);
-    this.addNumbers(div);
+    const card = div('.card');
+    this.shadow.appendChild(card);
+    this.addSolutionButton(card);
+    this.addNumbers(card);
     this.addStyle();
+  }
+
+  addSolutionButton(father) {
+    const solve = div('.solve', ['Solucionar']);
+    solve.addEventListener('click', () => this.requestSolve(solve));
+    father.appendChild(solve);
+  }
+
+  requestSolve(button) {
+    button.classList.add('active');
+    const requestSolveEvent = new CustomEvent('ASK_SOLVE');
+    this.dispatchEvent(requestSolveEvent);
   }
 
   addNumbers(father) {
@@ -83,157 +93,155 @@ class TriSolutionCard extends HTMLElement {
   }
 
   getStyle() {
-    return `
-      @import url('./font/fontello.css');
+    return style({
+      '@import': [
+        'url("./font/fontello.css")'
+      ],
 
-      :host {
-        --number-color-green: #27ae60;
-        --number-color-yellow: #f1c40f;
-        --number-color-black: #000000;
-        --number-color-brown: #855332;
-        --number-color-red: #df0000;
-        --number-color-pink: #f21fce;
-        --number-color-blue: #3498db;
-      }
-      
-      .card {
-        background-color: #ecf0f1;
-        font-family: 'Barlow', sans-serif;
-        width: 20em;
-        height: 0;
-        border-radius: 5px;
-        padding-bottom: 120%;
-        display: inline-block;
-        position: relative;
-        box-sizing: border-box;
-        box-shadow: 0 0 10px 0px #000000;
-      }
-      
-      .row {
-        height: 2em;
-        user-select: none;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-      }
+      ':host': {
+        '--number-color-green': '#27ae60',
+        '--number-color-yellow': '#f1c40f',
+        '--number-color-black': '#000000',
+        '--number-color-brown': '#855332',
+        '--number-color-red': '#df0000',
+        '--number-color-pink': '#f21fce',
+        '--number-color-blue': '#3498db'
+      },
 
-      .row:first-child {
-        margin-top: 0.5em;
-      }
+      '.card': {
+        'background-color': '#ecf0f1',
+        'font-family': '"Barlow", sans-serif',
+        'width': '20em',
+        'height': '0',
+        'border-radius': '5px',
+        'padding-bottom': '120%',
+        'display': 'inline-block',
+        'position': 'relative',
+        'box-sizing': 'border-box',
+        'box-shadow': '0 0 10px 0px #000000'
+      },
       
-      .number {
-        display: inline-block;
-        width: 1em;
-        font-weight: bold;
-        font-size: 2em;
-        cursor: pointer;
-        position: relative;
-        user-select: none;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-      }
-      
-      .number1.col1 { color: var(--number-color-green); }
-      .number2.col1 { color: var(--number-color-yellow); }
-      .number2.col2 { color: var(--number-color-yellow); }
-      .number3.col1 { color: var(--number-color-black); }
-      .number3.col2 { color: var(--number-color-black); }
-      .number3.col3 { color: var(--number-color-black); }
-      .number4.col1 { color: var(--number-color-brown); }
-      .number4.col2 { color: var(--number-color-brown); }
-      .number4.col3 { color: var(--number-color-brown); }
-      .number4.col4 { color: var(--number-color-brown); }
-      .number5.col1 { color: var(--number-color-red); }
-      .number5.col2 { color: var(--number-color-red); }
-      .number5.col3 { color: var(--number-color-red); }
-      .number5.col4 { color: var(--number-color-red); }
-      .number5.col5 { color: var(--number-color-black); }
-      .number6.col1 { color: var(--number-color-pink); }
-      .number6.col2 { color: var(--number-color-pink); }
-      .number6.col3 { color: var(--number-color-pink); }
-      .number6.col4 { color: var(--number-color-green); }
-      .number6.col5 { color: var(--number-color-green); }
-      .number6.col6 { color: var(--number-color-green); }
-      .number7.col1 { color: var(--number-color-yellow); }
-      .number7.col2 { color: var(--number-color-yellow); }
-      .number7.col3 { color: var(--number-color-pink); }
-      .number7.col4 { color: var(--number-color-blue); }
-      .number7.col5 { color: var(--number-color-blue); }
-      .number7.col6 { color: var(--number-color-blue); }
-      .number7.col7 { color: var(--number-color-blue); }
-      
-      .number.cross:before,
-      .number.square:before,
-      .number.circle:before {
-        font-family: "fontello";
-        font-style: normal;
-        font-weight: normal;
-        -webkit-font-smoothing: antialiased;
-        -moz-osx-font-smoothing: grayscale;
-        position: absolute;
-        font-size: 1em;
-        color: black;
-      }
-      
-      .number.cross:before {
-        content: '\\e805';
-      }
-      
-      .number.square:before {
-        font-size: 1.2em;
-        top: 0.1em;
-        content: '\\f096';
-      }
-      
-      .number.circle:before {
-        font-size: 1.2em;
-        content: '\\f1db';
-      }
+      '.row': {
+        'height': '2em',
+        'user-select': 'none',
+        'display': 'flex',
+        'justify-content': 'center',
+        'align-items': 'center'
+      },
 
-      textarea {
-        width: calc(100% - 2em);
-        height: 5em;
-        margin: 1em;
-        border: 1px solid rgba(0, 0, 0, 0.5);
-        border-radius: 5px;
-        resize: none;
-        outline: none;
-        padding: 0.5em;
-        font-family: 'Raleway', sans-serif;
-        background-color: transparent;
-        box-sizing: border-box;
-        font-size: 1em;
-      }
+      '.row:first-child': {
+        'margin-top': '0.5em'
+      },
       
-      .action-row {
-        height: 2em;
-        position: absolute;
-        bottom: 0.5em;
-        user-select: none;
-        width: 100%;
-      }
+      '.number': {
+        'display': 'inline-block',
+        'width': '1em',
+        'font-weight': 'bold',
+        'font-size': '2em',
+        'cursor': 'pointer',
+        'position': 'relative',
+        'user-select': 'none',
+        'display': 'flex',
+        'align-items': 'center',
+        'justify-content': 'center'
+      },
       
-      .action {
-        width: 2em;
-        height: 1em;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        cursor: pointer;
-        user-select: none;
-      }
+      '.number1.col1': { 'color': 'var(--number-color-green)' },
+      '.number2.col1': { 'color': 'var(--number-color-yellow)' },
+      '.number2.col2': { 'color': 'var(--number-color-yellow)' },
+      '.number3.col1': { 'color': 'var(--number-color-black)' },
+      '.number3.col2': { 'color': 'var(--number-color-black)' },
+      '.number3.col3': { 'color': 'var(--number-color-black)' },
+      '.number4.col1': { 'color': 'var(--number-color-brown)' },
+      '.number4.col2': { 'color': 'var(--number-color-brown)' },
+      '.number4.col3': { 'color': 'var(--number-color-brown)' },
+      '.number4.col4': { 'color': 'var(--number-color-brown)' },
+      '.number5.col1': { 'color': 'var(--number-color-red)' },
+      '.number5.col2': { 'color': 'var(--number-color-red)' },
+      '.number5.col3': { 'color': 'var(--number-color-red)' },
+      '.number5.col4': { 'color': 'var(--number-color-red)' },
+      '.number5.col5': { 'color': 'var(--number-color-black)' },
+      '.number6.col1': { 'color': 'var(--number-color-pink)' },
+      '.number6.col2': { 'color': 'var(--number-color-pink)' },
+      '.number6.col3': { 'color': 'var(--number-color-pink)' },
+      '.number6.col4': { 'color': 'var(--number-color-green)' },
+      '.number6.col5': { 'color': 'var(--number-color-green)' },
+      '.number6.col6': { 'color': 'var(--number-color-green)' },
+      '.number7.col1': { 'color': 'var(--number-color-yellow)' },
+      '.number7.col2': { 'color': 'var(--number-color-yellow)' },
+      '.number7.col3': { 'color': 'var(--number-color-pink)' },
+      '.number7.col4': { 'color': 'var(--number-color-blue)' },
+      '.number7.col5': { 'color': 'var(--number-color-blue)' },
+      '.number7.col6': { 'color': 'var(--number-color-blue)' },
+      '.number7.col7': { 'color': 'var(--number-color-blue)' },
       
-      .action.selected {
-        color: var(--number-color-red);
-      }
+      '.number.cross:before,.number.square:before,.number.circle:before': {
+        'font-family': '"fontello"',
+        'font-style': 'normal',
+        'font-weight': 'normal',
+        '-webkit-font-smoothing': 'antialiased',
+        '-moz-osx-font-smoothing': 'grayscale',
+        'position': 'absolute',
+        'font-size': '1em',
+        'color': 'black'
+      },
       
-      .action.cross,
-      .action.circle,
-      .action.square {
-        font-size: 2em;
+      '.number.cross:before': {
+        'content': '"\\e805"'
+      },
+      
+      '.number.square:before': {
+        'font-size': '1.2em',
+        'top': '0.1em',
+        'content': '"\\f096"',
+      },
+      
+      '.number.circle:before': {
+        'font-size': '1.2em',
+        'content': '"\\f1db"'
+      },
+
+      'textarea': {
+        'width': 'calc(100% - 2em)',
+        'height': '5em',
+        'margin': '1em',
+        'border': '1px solid rgba(0, 0, 0, 0.5)',
+        'border-radius': '5px',
+        'resize': 'none',
+        'outline': 'none',
+        'padding': '0.5em',
+        'font-family': '"Raleway", sans-serif',
+        'background-color': 'transparent',
+        'box-sizing': 'border-box',
+        'font-size': '1em'
+      },
+      
+      '.action-row': {
+        'height': '2em',
+        'position': 'absolute',
+        'bottom': '0.5em',
+        'user-select': 'none',
+        'width': '100%'
+      },
+      
+      '.action': {
+        'width': '2em',
+        'height': '1em',
+        'display': 'flex',
+        'align-items': 'center',
+        'justify-content': 'center',
+        'cursor': 'pointer',
+        'user-select': 'none'
+      },
+      
+      '.action.selected': {
+        'color': 'var(--number-color-red)'
+      },
+      
+      '.action.cross,.action.circle,.action.square': {
+        'font-size': '2em'
       }
-    `;
+    });
   }
 }
 

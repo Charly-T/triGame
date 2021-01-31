@@ -1,4 +1,4 @@
-import { div, createElement } from './naive.js';
+import { div, createElement, style } from './naive.js';
 
 class TriRack extends HTMLElement {
   constructor() {
@@ -29,9 +29,7 @@ class TriRack extends HTMLElement {
   }
 
   addStyle() {
-    const styleTag = document.createElement('style');
-    styleTag.textContent = this.getStyle(this.size);
-    this.shadow.appendChild(styleTag);
+    this.shadow.appendChild(this.getStyle());
   }
 
   render(name, rack) {
@@ -53,66 +51,66 @@ class TriRack extends HTMLElement {
   }
 
   getStyle() {
-    return `
-      :host {
-        --color-green: #2ecc71;
-        --color-dark-green: #27ae60;
-        --color-yellow: #f1c40f;
-        --color-black: #000000;
-        --color-brown: #855332;
-        --color-red: #df0000;
-        --color-pink: #f21fce;
-        --color-blue: #3498db;
-        --color-dark-blue: #2980b9;
-        --color-light-grey: #ecf0f1;
-        --color-dark-grey: #7f8c8d;
-      }
+    return style({
+      ':host': {
+        '--color-green': '#2ecc71',
+        '--color-dark-green': '#27ae60',
+        '--color-yellow': '#f1c40f',
+        '--color-black': '#000000',
+        '--color-brown': '#855332',
+        '--color-red': '#df0000',
+        '--color-pink': '#f21fce',
+        '--color-blue': '#3498db',
+        '--color-dark-blue': '#2980b9',
+        '--color-light-grey': '#ecf0f1',
+        '--color-dark-grey': '#7f8c8d'
+      },
       
-      .rack {
-        width: calc((5rem * 3) + (2rem * 2));
-        display: inline-block;
-        text-align: center;
-        height: 0;
-        padding-bottom: 50%;
-        position: relative;
-      }
+      '.rack': {
+        width: 'calc((5rem * 3) + (2rem * 2))',
+        display: 'inline-block',
+        textAlign: 'center',
+        height: '0',
+        paddingBottom: '50%',
+        position: 'relative'
+      },
 
-      .rack:after {
-        content: '';
-        position: absolute;
-        width: 100%;
-        height: 80%;
-        background-color: var(--color-black);
-        bottom: 0;
-        left: 0;
-        z-index: 0;
-        border-radius: 10px 10px 5px 5px;
-      }
+      '.rack:after': {
+        content: '',
+        position: 'absolute',
+        width: '100%',
+        height: '80%',
+        backgroundColor: 'var(--color-black)',
+        bottom: '0',
+        left: '0',
+        zIndex: '0',
+        borderRadius: '10px 10px 5px 5px'
+      },
 
-      .rack.highlight:after {
-        background-color: var(--color-dark-green);
-      }
+      '.rack.highlight:after': {
+        backgroundColor: 'var(--color-dark-green)'
+      },
 
-      .name {
-        color: white;
-        z-index: 1;
-        position: absolute;
-        text-align: center;
-        width: 100%;
-        font-family: 'Raleway', sans-serif;
-        font-size: 2rem;
-      }
+      '.name': {
+        color: 'white',
+        zIndex: '1',
+        position: 'absolute',
+        textAlign: 'center',
+        width: '100%',
+        fontFamily: '"Raleway", sans-serif',
+        fontSize: '2rem'
+      },
 
-      tri-tile-number {
-        margin-left: 0.8rem;
-        position: relative;
-        z-index: 1;
-      }
+      'tri-tile-number': {
+        marginLeft: '0.8rem',
+        position: 'relative',
+        zIndex: '1'
+      },
 
-      tri-tile-number:first-child {
-        margin-left: 0;
+      'tri-tile-number:first-child': {
+        marginLeft: '0'
       }
-    `;
+    });
   }
 }
 
